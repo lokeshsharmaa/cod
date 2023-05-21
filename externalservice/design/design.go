@@ -79,7 +79,7 @@ var _ = Service("externalservice", func() {
 	})
 
 	// Deleting a Character by ID
-	Method("update_character", func() {
+	Method("delete_character", func() {
 		Description("Deleting a Character")
 		Payload(func() {
 			Field(1, "id", Int, "Character ID")
