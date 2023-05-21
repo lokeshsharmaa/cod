@@ -1,0 +1,224 @@
+openapi: 3.0.3
+info:
+    title: External Service to interact with Character on Duty game
+    description: ' HTTP/JSON front service to manipulate characters, inventories, and items'
+    version: "1.0"
+servers:
+    - url: http://localhost:8080
+paths:
+    /characters:
+        post:
+            tags:
+                - externalservice
+            summary: create_character externalservice
+            description: Creating a new Character
+            operationId: externalservice#create_character
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateCharacterRequestBody'
+                        example:
+                            description: Ad excepturi officia necessitatibus autem vero.
+                            experience: 6304895944173359943
+                            health: 7361944416981608895
+                            name: Ipsa eum necessitatibus ratione commodi.
+            responses:
+                "201":
+                    description: Created response.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Character'
+                            example:
+                                description: Officiis sunt.
+                                experience: 8954573898279886247
+                                health: 2801366997493658895
+                                id: 4356833609660147627
+                                name: Laboriosam quia eius.
+    /characters/{id}:
+        delete:
+            tags:
+                - externalservice
+            summary: delete_character externalservice
+            description: Deleting a Character
+            operationId: externalservice#delete_character
+            parameters:
+                - name: id
+                  in: path
+                  description: Character ID
+                  required: true
+                  schema:
+                    type: integer
+                    description: Character ID
+                    example: 6570017454609435199
+                    format: int64
+                  example: 3695807395756318466
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
+        get:
+            tags:
+                - externalservice
+            summary: get_character externalservice
+            description: Fetching a Character
+            operationId: externalservice#get_character
+            parameters:
+                - name: id
+                  in: path
+                  description: Character ID
+                  required: true
+                  schema:
+                    type: integer
+                    description: Character ID
+                    example: 6107792297292260009
+                    format: int64
+                  example: 7303609540832021756
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Character'
+                            example:
+                                description: Non consequatur ut.
+                                experience: 9198454225016935713
+                                health: 598303562754455634
+                                id: 4139230249240955173
+                                name: Sunt omnis facere aliquam.
+        put:
+            tags:
+                - externalservice
+            summary: update_character externalservice
+            description: Updating a Character
+            operationId: externalservice#update_character
+            parameters:
+                - name: id
+                  in: path
+                  description: Character ID
+                  required: true
+                  schema:
+                    type: integer
+                    description: Character ID
+                    example: 6706968390195685352
+                    format: int64
+                  example: 1541563904282076137
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateCharacterRequestBody'
+                        example:
+                            description: Quia quae distinctio ut.
+                            experience: 8109871214411202544
+                            health: 5826639684918267823
+                            name: Eius dolor at molestiae iste qui.
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
+components:
+    schemas:
+        Character:
+            type: object
+            properties:
+                description:
+                    type: string
+                    description: Character description
+                    example: Dicta quia perferendis reprehenderit.
+                experience:
+                    type: integer
+                    description: Character experience
+                    example: 9042653507876605388
+                    format: int64
+                health:
+                    type: integer
+                    description: Character health
+                    example: 7373626352858117030
+                    format: int64
+                id:
+                    type: integer
+                    description: Character ID
+                    example: 6022789432163838060
+                    format: int64
+                name:
+                    type: string
+                    description: Character name
+                    example: Deserunt consequatur et officia esse aut.
+            example:
+                description: Officia tempora est vel nihil voluptatum sapiente.
+                experience: 7215715887954643450
+                health: 3920608295908025507
+                id: 7504518419670908707
+                name: Nostrum quo occaecati.
+        CreateCharacterRequestBody:
+            type: object
+            properties:
+                description:
+                    type: string
+                    description: Character description
+                    example: Animi ea.
+                experience:
+                    type: integer
+                    description: Character experience
+                    example: 3271479134034242427
+                    format: int64
+                health:
+                    type: integer
+                    description: Character health
+                    example: 6663502197917004876
+                    format: int64
+                name:
+                    type: string
+                    description: Character name
+                    example: Tenetur placeat.
+            example:
+                description: In iure magnam.
+                experience: 3240580154618403769
+                health: 4215801335920168977
+                name: Eligendi qui omnis quia consequatur.
+            required:
+                - name
+                - health
+                - experience
+        UpdateCharacterRequestBody:
+            type: object
+            properties:
+                description:
+                    type: string
+                    description: Character description
+                    example: Impedit perferendis.
+                experience:
+                    type: integer
+                    description: Character experience
+                    example: 8781469473551597709
+                    format: int64
+                health:
+                    type: integer
+                    description: Character health
+                    example: 8638439644347972807
+                    format: int64
+                name:
+                    type: string
+                    description: Character name
+                    example: Amet aliquid consequatur aliquam.
+            example:
+                description: Atque nesciunt.
+                experience: 8010806939951783896
+                health: 4007669764635190358
+                name: Sapiente hic quia.
+tags:
+    - name: externalservice
+      description: Contains API CRUD operations on characters, inventories, and items.
