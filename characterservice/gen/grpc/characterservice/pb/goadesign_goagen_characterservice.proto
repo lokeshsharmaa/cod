@@ -1,0 +1,81 @@
+// Code generated with goa v3.11.3, DO NOT EDIT.
+//
+// characterservice protocol buffer definition
+//
+// Command:
+// $ goa gen assignment_crossnokaye/cod/characterservice/design
+
+syntax = "proto3";
+
+package characterservice;
+
+option go_package = "/characterservicepb";
+
+// Handles CRUD operations for characters.
+service Characterservice {
+	// Create a new character.
+	rpc Create (CreateRequest) returns (CreateResponse);
+	// Retrieve a character by ID.
+	rpc Get (GetRequest) returns (GetResponse);
+	// Update a character.
+	rpc Update (UpdateRequest) returns (UpdateResponse);
+	// Delete a character by ID.
+	rpc Delete (DeleteRequest) returns (DeleteResponse);
+}
+
+message CreateRequest {
+	// Character name
+	string name = 1;
+	// Character description
+	optional string description = 2;
+	// Character health
+	sint32 health = 3;
+	// Character experience
+	sint32 experience = 4;
+}
+
+message CreateResponse {
+	sint32 field = 1;
+}
+
+message GetRequest {
+	// Character ID
+	sint32 id = 1;
+}
+
+message GetResponse {
+	// Character ID
+	optional sint32 id = 1;
+	// Character name
+	optional string name = 2;
+	// Character description
+	optional string description = 3;
+	// Character health
+	optional sint32 health = 4;
+	// Character experience
+	optional sint32 experience = 5;
+}
+
+message UpdateRequest {
+	// Character ID
+	sint32 id = 1;
+	// Character name
+	optional string name = 2;
+	// Character description
+	optional string description = 3;
+	// Character health
+	optional sint32 health = 4;
+	// Character experience
+	optional sint32 experience = 5;
+}
+
+message UpdateResponse {
+}
+
+message DeleteRequest {
+	// Character ID
+	sint32 id = 1;
+}
+
+message DeleteResponse {
+}
