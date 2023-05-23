@@ -1,0 +1,55 @@
+// Code generated with goa v3.11.3, DO NOT EDIT.
+//
+// inventoryservice protocol buffer definition
+//
+// Command:
+// $ goa gen assignment_crossnokaye/cod/inventoryservice/design
+
+syntax = "proto3";
+
+package inventoryservice;
+
+option go_package = "/inventoryservicepb";
+
+// The inventoryservice service handles CRUD operations for character
+// inventories.
+service Inventoryservice {
+	// Retrieve an inventory.
+	rpc Get (GetRequest) returns (GetResponse);
+	// Update an inventory.
+	rpc Add (AddRequest) returns (AddResponse);
+	// Delete an inventory by ID.
+	rpc Delete (DeleteRequest) returns (DeleteResponse);
+}
+
+message GetRequest {
+	// Character ID
+	sint32 id = 1;
+}
+
+message GetResponse {
+	// Character ID
+	optional sint32 character_id = 1;
+	// Items in the inventory
+	repeated sint32 items = 2;
+}
+
+message AddRequest {
+	// Character ID
+	sint32 character_id = 1;
+	// Item ID
+	optional sint32 item_id = 2;
+}
+
+message AddResponse {
+}
+
+message DeleteRequest {
+	// Character ID
+	sint32 character_id = 1;
+	// Item ID
+	sint32 item_id = 2;
+}
+
+message DeleteResponse {
+}
