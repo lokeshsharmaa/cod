@@ -54,7 +54,7 @@ func (s *itemServicesrvc) Update(ctx context.Context, p *itemservice.UpdatePaylo
 	if !ok {
 		return itemservice.NotFound("Not Found")
 	}
-	if res.Name != p.Name {
+	if *res.Name != *p.Name {
 		if _, ok := s.uniqueNameMapper[*p.Name]; ok {
 			return itemservice.UniqueConstraint("Name not Unique")
 		}
