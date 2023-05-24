@@ -7,8 +7,8 @@ import (
 )
 
 type inventoryservicesrvc struct {
-	logger         *log.Logger
-	characterItems map[int]map[int]bool
+	logger               *log.Logger
+	characterItemsMapper map[int]map[int]bool
 }
 
 func NewInventoryservice(logger *log.Logger) inventoryservice.Service {
@@ -16,8 +16,8 @@ func NewInventoryservice(logger *log.Logger) inventoryservice.Service {
 }
 
 func (s *inventoryservicesrvc) Get(ctx context.Context, p *inventoryservice.GetPayload) (res *inventoryservice.Inventory, err error) {
-	items, ok := s.characterItems[p.ID]
-	if !ok {
+	items, found := s.characterItemsMapper[p.ID]
+	if !found {
 		return nil, inventoryservice.NotFound("character not found")
 	}
 
@@ -30,22 +30,22 @@ func (s *inventoryservicesrvc) Get(ctx context.Context, p *inventoryservice.GetP
 }
 
 func (s *inventoryservicesrvc) Add(ctx context.Context, p *inventoryservice.AddPayload) (err error) {
-	_, ok := s.characterItems[p.CharacterID]
-	if !ok {
-		return inventoryservice.NotFound("character not found")
+	_, found := s.characterItemsMapper[p.CharacterID]
+	if !found {
+		s.characterItemsMapper[p.CharacterID] = make(map[int]bool)
 	}
-	s.characterItems[p.CharacterID][*p.ItemID] = true
+	s.characterItemsMapper[p.CharacterID][*p.ItemID] = true
 	return nil
 }
 
 func (s *inventoryservicesrvc) Delete(ctx context.Context, p *inventoryservice.DeletePayload) (err error) {
-	items, ok := s.characterItems[p.CharacterID]
-	if !ok {
+	items, found := s.characterItemsMapper[p.CharacterID]
+	if !found {
 		return inventoryservice.NotFound("character not found")
 	}
 	if _, exists := items[p.ItemID]; !exists {
 		return inventoryservice.NotFound("item not found")
 	}
-	delete(s.characterItems[p.CharacterID], p.ItemID)
+	delete(s.characterItemsMapper[p.CharacterID], p.ItemID)
 	return nil
 }
