@@ -29,10 +29,10 @@ func UsageCommands() string {
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
 	return os.Args[0] + ` externalservice create-character --body '{
-      "description": "Ut quia accusantium at amet ut.",
-      "experience": 3689643759782600333,
-      "health": 2497093007532229202,
-      "name": "Qui aperiam pariatur voluptatem ut mollitia est."
+      "description": "Quia accusantium at.",
+      "experience": 7504908446685337858,
+      "health": 3619980492128977673,
+      "name": "Aperiam pariatur voluptatem ut mollitia est dolorum."
    }'` + "\n" +
 		""
 }
@@ -266,10 +266,10 @@ Creating a new Character
 
 Example:
     %[1]s externalservice create-character --body '{
-      "description": "Ut quia accusantium at amet ut.",
-      "experience": 3689643759782600333,
-      "health": 2497093007532229202,
-      "name": "Qui aperiam pariatur voluptatem ut mollitia est."
+      "description": "Quia accusantium at.",
+      "experience": 7504908446685337858,
+      "health": 3619980492128977673,
+      "name": "Aperiam pariatur voluptatem ut mollitia est dolorum."
    }'
 `, os.Args[0])
 }
@@ -281,7 +281,7 @@ Fetching a Character
     -id INT: Character ID
 
 Example:
-    %[1]s externalservice get-character --id 1591572569422129497
+    %[1]s externalservice get-character --id 4895519642322725052
 `, os.Args[0])
 }
 
@@ -294,11 +294,11 @@ Updating a Character
 
 Example:
     %[1]s externalservice update-character --body '{
-      "description": "Facilis eligendi soluta similique illum reiciendis.",
-      "experience": 4429716038026485218,
-      "health": 7231771245341319977,
-      "name": "Eveniet rerum voluptatem."
-   }' --id 2823621889944725328
+      "description": "Voluptatibus facilis eligendi.",
+      "experience": 2295296644735305742,
+      "health": 165736114070582521,
+      "name": "Blanditiis debitis itaque soluta unde eveniet rerum."
+   }' --id 5000818862742884156
 `, os.Args[0])
 }
 
@@ -309,7 +309,7 @@ Deleting a Character
     -id INT: Character ID
 
 Example:
-    %[1]s externalservice delete-character --id 2304153007448072890
+    %[1]s externalservice delete-character --id 7231771245341319977
 `, os.Args[0])
 }
 
@@ -320,7 +320,7 @@ Fetching a Character's Inventory
     -character-id INT: Character ID
 
 Example:
-    %[1]s externalservice get-inventory --character-id 2154155204521645316
+    %[1]s externalservice get-inventory --character-id 2823621889944725328
 `, os.Args[0])
 }
 
@@ -333,8 +333,8 @@ Adding an Item to Character's Inventory
 
 Example:
     %[1]s externalservice add-item-to-inventory --body '{
-      "item_id": 568441057683699993
-   }' --character-id 5667695314406382572
+      "item_id": 4051215986249105462
+   }' --character-id 7172220335750382023
 `, os.Args[0])
 }
 
@@ -346,7 +346,7 @@ Removing an Item from Character's Inventory
     -item-id INT: Item ID
 
 Example:
-    %[1]s externalservice remove-item-from-inventory --character-id 3326990369775092063 --item-id 5725183425841763447
+    %[1]s externalservice remove-item-from-inventory --character-id 230509794283928459 --item-id 568441057683699993
 `, os.Args[0])
 }
 
@@ -358,11 +358,11 @@ Creating a new Item
 
 Example:
     %[1]s externalservice create-item --body '{
-      "damage": 8526212768874492114,
-      "description": "Consequuntur sit.",
-      "healing": 8265794075702108861,
-      "name": "Libero maxime voluptatem aut.",
-      "protection": 4780250306447570797
+      "damage": 7411844236711108445,
+      "description": "Voluptatem aut adipisci consequuntur.",
+      "healing": 8526212768874492114,
+      "name": "Illum eligendi sit adipisci deleniti libero.",
+      "protection": 8265794075702108861
    }'
 `, os.Args[0])
 }
@@ -374,7 +374,7 @@ Fetching a Item
     -id INT: Item ID
 
 Example:
-    %[1]s externalservice get-item --id 7732534785951416741
+    %[1]s externalservice get-item --id 1140742639690035458
 `, os.Args[0])
 }
 
@@ -387,11 +387,12 @@ Updating a Item
 
 Example:
     %[1]s externalservice update-item --body '{
-      "description": "In iure magnam.",
-      "experience": 3240580154618403769,
-      "health": 4215801335920168977,
-      "name": "Omnis quia consequatur."
-   }' --id 6022789432163838060
+      "damage": 4745655013780091933,
+      "description": "Molestias nihil deserunt consequatur et.",
+      "healing": 4655480139633279032,
+      "name": "Quia consequatur reprehenderit in iure magnam aut.",
+      "protection": 8092756765326534611
+   }' --id 2874193097637815938
 `, os.Args[0])
 }
 
@@ -402,6 +403,6 @@ Deleting a Item
     -id INT: Item ID
 
 Example:
-    %[1]s externalservice delete-item --id 8060972358180548241
+    %[1]s externalservice delete-item --id 4090554362484142833
 `, os.Args[0])
 }

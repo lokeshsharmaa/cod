@@ -192,10 +192,12 @@ type UpdateItemPayload struct {
 	Name *string
 	// Item description
 	Description *string
-	// Item health
-	Health *int
-	// Item experience
-	Experience *int
+	// Item damage
+	Damage *int
+	// Item healing
+	Healing *int
+	// Item protection
+	Protection *int
 }
 
 // Bad request

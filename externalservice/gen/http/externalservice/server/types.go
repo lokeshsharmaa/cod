@@ -68,10 +68,12 @@ type UpdateItemRequestBody struct {
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
 	// Item description
 	Description *string `form:"description,omitempty" json:"description,omitempty" xml:"description,omitempty"`
-	// Item health
-	Health *int `form:"health,omitempty" json:"health,omitempty" xml:"health,omitempty"`
-	// Item experience
-	Experience *int `form:"experience,omitempty" json:"experience,omitempty" xml:"experience,omitempty"`
+	// Item damage
+	Damage *int `form:"damage,omitempty" json:"damage,omitempty" xml:"damage,omitempty"`
+	// Item healing
+	Healing *int `form:"healing,omitempty" json:"healing,omitempty" xml:"healing,omitempty"`
+	// Item protection
+	Protection *int `form:"protection,omitempty" json:"protection,omitempty" xml:"protection,omitempty"`
 }
 
 // CreateCharacterResponseBody is the type of the "externalservice" service
@@ -319,8 +321,9 @@ func NewUpdateItemPayload(body *UpdateItemRequestBody, id int) *externalservice.
 	v := &externalservice.UpdateItemPayload{
 		Name:        body.Name,
 		Description: body.Description,
-		Health:      body.Health,
-		Experience:  body.Experience,
+		Damage:      body.Damage,
+		Healing:     body.Healing,
+		Protection:  body.Protection,
 	}
 	v.ID = id
 

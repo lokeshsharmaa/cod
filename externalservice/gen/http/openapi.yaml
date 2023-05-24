@@ -254,10 +254,10 @@ definitions:
             item_id:
                 type: integer
                 description: Item ID
-                example: 5446354604949480240
+                example: 4630650691871178730
                 format: int64
         example:
-            item_id: 6974534759334310366
+            item_id: 7009907869038611991
         required:
             - item_id
     ExternalserviceCreateCharacterRequestBody:
@@ -267,26 +267,26 @@ definitions:
             description:
                 type: string
                 description: Character description
-                example: Impedit perferendis.
+                example: Sapiente hic quia.
             experience:
                 type: integer
                 description: Character experience
-                example: 8781469473551597709
+                example: 3481136660449390181
                 format: int64
             health:
                 type: integer
                 description: Character health
-                example: 8638439644347972807
+                example: 4287733103703219647
                 format: int64
             name:
                 type: string
                 description: Character name
-                example: Amet aliquid consequatur aliquam.
+                example: Ab impedit perferendis repellendus distinctio.
         example:
-            description: Atque nesciunt.
-            experience: 8010806939951783896
-            health: 4007669764635190358
-            name: Sapiente hic quia.
+            description: Omnis illum aut.
+            experience: 3695807395756318466
+            health: 6570017454609435199
+            name: Perferendis omnis.
         required:
             - name
             - health
@@ -298,32 +298,32 @@ definitions:
             description:
                 type: string
                 description: Character description
-                example: Dicta quia perferendis reprehenderit.
+                example: Nostrum quo occaecati.
             experience:
                 type: integer
                 description: Character experience
-                example: 9042653507876605388
+                example: 5270088225332859367
                 format: int64
             health:
                 type: integer
                 description: Character health
-                example: 7373626352858117030
+                example: 5086133752524859367
                 format: int64
             id:
                 type: integer
                 description: Character ID
-                example: 174988039524684926
+                example: 408567212900115358
                 format: int64
             name:
                 type: string
                 description: Character name
-                example: Officia esse aut.
+                example: Saepe qui velit.
         example:
-            description: Officia tempora est vel nihil voluptatum sapiente.
-            experience: 7215715887954643450
-            health: 3920608295908025507
-            id: 7504518419670908707
-            name: Nostrum quo occaecati.
+            description: Dolor amet.
+            experience: 3585693831988968906
+            health: 4225382768778119636
+            id: 2479077515049903083
+            name: Vel nihil voluptatum sapiente architecto.
     ExternalserviceCreateItemRequestBody:
         title: ExternalserviceCreateItemRequestBody
         type: object
@@ -331,32 +331,32 @@ definitions:
             damage:
                 type: integer
                 description: Item damage
-                example: 8531265301993307347
+                example: 2994038979835082054
                 format: int64
             description:
                 type: string
                 description: Item description
-                example: Voluptatum quae officia voluptates soluta qui.
+                example: Quae eum qui.
             healing:
                 type: integer
                 description: Item healing
-                example: 7675970965466525955
+                example: 9194142451948803288
                 format: int64
             name:
                 type: string
                 description: Item name
-                example: Animi quia magni natus ab velit.
+                example: Quia nihil qui provident.
             protection:
                 type: integer
                 description: Item protection
-                example: 4169825874854255296
+                example: 7405198242760262161
                 format: int64
         example:
-            damage: 7016508623957833266
-            description: Harum quae.
-            healing: 376749441344441169
-            name: Aut quia quis quia nihil qui.
-            protection: 2994038979835082054
+            damage: 4475379017843627304
+            description: Saepe sed ipsam.
+            healing: 5974718854161746987
+            name: Et aut earum ducimus officiis.
+            protection: 8914231265589352742
         required:
             - name
             - damage
@@ -367,38 +367,38 @@ definitions:
             damage:
                 type: integer
                 description: Item damage
-                example: 6547294612653825095
+                example: 8161718370029006879
                 format: int64
             description:
                 type: string
                 description: Item description
-                example: Nobis quia voluptatem.
+                example: Earum deserunt.
             healing:
                 type: integer
                 description: Item healing
-                example: 3279275974528703984
+                example: 6749135124074030497
                 format: int64
             id:
                 type: integer
                 description: Item ID
-                example: 5237939438812277177
+                example: 6547294612653825095
                 format: int64
             name:
                 type: string
                 description: Item name
-                example: Sed repudiandae accusantium totam et.
+                example: Nobis doloribus voluptas rerum vel facere ipsum.
             protection:
                 type: integer
                 description: Item protection
-                example: 8648443142169976711
+                example: 1480494161758943600
                 format: int64
         example:
-            damage: 4567613504495210182
-            description: Id earum.
-            healing: 8161718370029006879
-            id: 9063336445457160883
-            name: Rerum vel facere.
-            protection: 6749135124074030497
+            damage: 3065371085860081185
+            description: Officia voluptates soluta qui ipsa aut dolorem.
+            healing: 2607253794893526799
+            id: 8256175292977883448
+            name: Magni natus ab velit voluptatem voluptatum.
+            protection: 8978849215693174701
     ExternalserviceGetCharacterResponseBody:
         title: ExternalserviceGetCharacterResponseBody
         type: object
@@ -406,32 +406,32 @@ definitions:
             description:
                 type: string
                 description: Character description
-                example: Velit asperiores aut sunt.
+                example: Dolor quae omnis provident omnis quod.
             experience:
                 type: integer
                 description: Character experience
-                example: 200986543734071323
+                example: 1296475755254587538
                 format: int64
             health:
                 type: integer
                 description: Character health
-                example: 1038743871068844267
+                example: 5001157816933064232
                 format: int64
             id:
                 type: integer
                 description: Character ID
-                example: 6107792297292260009
+                example: 7383368376551602152
                 format: int64
             name:
                 type: string
                 description: Character name
-                example: Illum aut dicta odit ullam ut.
+                example: Eum velit asperiores aut.
         example:
-            description: Eaque quasi reprehenderit tempora quibusdam rem.
-            experience: 608951620552977177
-            health: 429958962292769397
-            id: 5359696290204275863
-            name: Omnis quod omnis veniam et.
+            description: Voluptatem dolores praesentium dolorem tenetur.
+            experience: 6586869591943214107
+            health: 1456303335480671636
+            id: 7803561113615713282
+            name: Eaque quasi reprehenderit tempora quibusdam rem.
     ExternalserviceGetInventoryResponseBody:
         title: ExternalserviceGetInventoryResponseBody
         type: object
@@ -439,25 +439,25 @@ definitions:
             character_id:
                 type: integer
                 description: Character ID
-                example: 5889723221536471882
+                example: 5446354604949480240
                 format: int64
             items:
                 type: array
                 items:
                     type: integer
-                    example: 7411150433836695286
+                    example: 6974534759334310366
                     format: int64
                 description: Item IDs
                 example:
-                    - 2506775543531434538
-                    - 2306927391025578938
-                    - 6543905432608736991
+                    - 7125094067975707545
+                    - 1450835708486811479
+                    - 60529530767820953
+                    - 3764705354339239661
         example:
-            character_id: 7448432484047355240
+            character_id: 6316509762557874991
             items:
-                - 381728469467529204
-                - 3522135934339545344
-                - 2667119234149912196
+                - 8236371412165363421
+                - 1683258750153452482
     ExternalserviceGetItemResponseBody:
         title: ExternalserviceGetItemResponseBody
         type: object
@@ -465,38 +465,38 @@ definitions:
             damage:
                 type: integer
                 description: Item damage
-                example: 8901205443985314869
+                example: 1027470638360337467
                 format: int64
             description:
                 type: string
                 description: Item description
-                example: Ducimus officiis eos saepe sed.
+                example: Quis velit qui libero ab.
             healing:
                 type: integer
                 description: Item healing
-                example: 4475379017843627304
+                example: 8726569194017809792
                 format: int64
             id:
                 type: integer
                 description: Item ID
-                example: 9194142451948803288
+                example: 7963166601482355830
                 format: int64
             name:
                 type: string
                 description: Item name
-                example: Iure et aut.
+                example: Cum incidunt sint deserunt illo.
             protection:
                 type: integer
                 description: Item protection
-                example: 5974718854161746987
+                example: 914218255509486548
                 format: int64
         example:
-            damage: 3642819452694263717
-            description: Deserunt illo aut quis velit qui libero.
-            healing: 1027470638360337467
-            id: 8914231265589352742
-            name: Culpa cum incidunt.
-            protection: 8726569194017809792
+            damage: 8522661436454636020
+            description: Tenetur est illum exercitationem.
+            healing: 8973450015811728008
+            id: 559403157830391578
+            name: Saepe similique dolorum odit ipsum totam ipsum.
+            protection: 7566590973785591336
     ExternalserviceUpdateCharacterRequestBody:
         title: ExternalserviceUpdateCharacterRequestBody
         type: object
@@ -504,50 +504,56 @@ definitions:
             description:
                 type: string
                 description: Character description
-                example: Aut saepe.
+                example: Dolorum molestiae ex et nostrum doloremque.
             experience:
                 type: integer
                 description: Character experience
-                example: 5171694523569793010
+                example: 3266677924080502706
                 format: int64
             health:
                 type: integer
                 description: Character health
-                example: 9202151890835684603
+                example: 5260269547118806682
                 format: int64
             name:
                 type: string
                 description: Character name
-                example: Praesentium dolorem.
+                example: Exercitationem velit occaecati.
         example:
-            description: Nostrum doloremque.
-            experience: 3266677924080502706
-            health: 5260269547118806682
-            name: Occaecati non dolorum molestiae ex.
+            description: Voluptas asperiores aut.
+            experience: 2667119234149912196
+            health: 3522135934339545344
+            name: Ut aut fuga quae.
     ExternalserviceUpdateItemRequestBody:
         title: ExternalserviceUpdateItemRequestBody
         type: object
         properties:
+            damage:
+                type: integer
+                description: Item damage
+                example: 4199713506221999820
+                format: int64
             description:
                 type: string
                 description: Item description
-                example: Odit ipsum totam.
-            experience:
+                example: Quis neque sequi at veniam quia.
+            healing:
                 type: integer
-                description: Item experience
-                example: 8400240594499316579
-                format: int64
-            health:
-                type: integer
-                description: Item health
-                example: 7347580269520923867
+                description: Item healing
+                example: 5481450139110861041
                 format: int64
             name:
                 type: string
                 description: Item name
-                example: Aspernatur labore saepe similique.
+                example: Et aliquid consequuntur porro sint laboriosam.
+            protection:
+                type: integer
+                description: Item protection
+                example: 5500573885054759015
+                format: int64
         example:
-            description: Et et aliquid consequuntur.
-            experience: 1270687361858645432
-            health: 2151255146577260559
-            name: Est illum exercitationem rerum non.
+            damage: 1866404911380260586
+            description: Dolorum ipsum.
+            healing: 2810801649502793118
+            name: Necessitatibus non numquam.
+            protection: 6991920373260096959

@@ -22,7 +22,7 @@ func BuildCreateCharacterPayload(externalserviceCreateCharacterBody string) (*ex
 	{
 		err = json.Unmarshal([]byte(externalserviceCreateCharacterBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"description\": \"Ut quia accusantium at amet ut.\",\n      \"experience\": 3689643759782600333,\n      \"health\": 2497093007532229202,\n      \"name\": \"Qui aperiam pariatur voluptatem ut mollitia est.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"description\": \"Quia accusantium at.\",\n      \"experience\": 7504908446685337858,\n      \"health\": 3619980492128977673,\n      \"name\": \"Aperiam pariatur voluptatem ut mollitia est dolorum.\"\n   }'")
 		}
 	}
 	v := &externalservice.CreateCharacterPayload{
@@ -62,7 +62,7 @@ func BuildUpdateCharacterPayload(externalserviceUpdateCharacterBody string, exte
 	{
 		err = json.Unmarshal([]byte(externalserviceUpdateCharacterBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"description\": \"Facilis eligendi soluta similique illum reiciendis.\",\n      \"experience\": 4429716038026485218,\n      \"health\": 7231771245341319977,\n      \"name\": \"Eveniet rerum voluptatem.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"description\": \"Voluptatibus facilis eligendi.\",\n      \"experience\": 2295296644735305742,\n      \"health\": 165736114070582521,\n      \"name\": \"Blanditiis debitis itaque soluta unde eveniet rerum.\"\n   }'")
 		}
 	}
 	var id int
@@ -131,7 +131,7 @@ func BuildAddItemToInventoryPayload(externalserviceAddItemToInventoryBody string
 	{
 		err = json.Unmarshal([]byte(externalserviceAddItemToInventoryBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"item_id\": 568441057683699993\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"item_id\": 4051215986249105462\n   }'")
 		}
 	}
 	var characterID int
@@ -188,7 +188,7 @@ func BuildCreateItemPayload(externalserviceCreateItemBody string) (*externalserv
 	{
 		err = json.Unmarshal([]byte(externalserviceCreateItemBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"damage\": 8526212768874492114,\n      \"description\": \"Consequuntur sit.\",\n      \"healing\": 8265794075702108861,\n      \"name\": \"Libero maxime voluptatem aut.\",\n      \"protection\": 4780250306447570797\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"damage\": 7411844236711108445,\n      \"description\": \"Voluptatem aut adipisci consequuntur.\",\n      \"healing\": 8526212768874492114,\n      \"name\": \"Illum eligendi sit adipisci deleniti libero.\",\n      \"protection\": 8265794075702108861\n   }'")
 		}
 	}
 	v := &externalservice.CreateItemPayload{
@@ -229,7 +229,7 @@ func BuildUpdateItemPayload(externalserviceUpdateItemBody string, externalservic
 	{
 		err = json.Unmarshal([]byte(externalserviceUpdateItemBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"description\": \"In iure magnam.\",\n      \"experience\": 3240580154618403769,\n      \"health\": 4215801335920168977,\n      \"name\": \"Omnis quia consequatur.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"damage\": 4745655013780091933,\n      \"description\": \"Molestias nihil deserunt consequatur et.\",\n      \"healing\": 4655480139633279032,\n      \"name\": \"Quia consequatur reprehenderit in iure magnam aut.\",\n      \"protection\": 8092756765326534611\n   }'")
 		}
 	}
 	var id int
@@ -244,8 +244,9 @@ func BuildUpdateItemPayload(externalserviceUpdateItemBody string, externalservic
 	v := &externalservice.UpdateItemPayload{
 		Name:        body.Name,
 		Description: body.Description,
-		Health:      body.Health,
-		Experience:  body.Experience,
+		Damage:      body.Damage,
+		Healing:     body.Healing,
+		Protection:  body.Protection,
 	}
 	v.ID = id
 

@@ -151,28 +151,81 @@ func (s *externalservicesrvc) RemoveItemFromInventory(ctx context.Context, p *ex
 	return nil
 }
 
-// Creating a new Item
 func (s *externalservicesrvc) CreateItem(ctx context.Context, p *externalservice.CreateItemPayload) (res *externalservice.Item, err error) {
-	res = &externalservice.Item{}
-	s.logger.Print("externalservice.create_item")
-	return
+	payload := &itemservice.CreatePayload{
+		Name:        p.Name,
+		Description: p.Description,
+		Damage:      p.Damage,
+		Healing:     p.Healing,
+		Protection:  p.Protection,
+	}
+
+	responseCode, err := s.itemServiceClient.CreateItem(ctx, payload)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &externalservice.Item{
+		ID:          responseCode,
+		Name:        &p.Name,
+		Description: p.Description,
+		Damage:      &p.Damage,
+		Healing:     p.Healing,
+		Protection:  p.Protection,
+	}
+
+	return response, nil
 }
 
-// Fetching a Item
 func (s *externalservicesrvc) GetItem(ctx context.Context, p *externalservice.GetItemPayload) (res *externalservice.Item, err error) {
-	res = &externalservice.Item{}
-	s.logger.Print("externalservice.get_item")
-	return
+	payload := &itemservice.GetPayload{
+		ID: p.ID,
+	}
+
+	response, err := s.itemServiceClient.GetItem(ctx, payload)
+	if err != nil {
+		return nil, err
+	}
+
+	res = &externalservice.Item{
+		ID:          response.ID,
+		Name:        response.Name,
+		Description: response.Description,
+		Damage:      response.Damage,
+		Healing:     response.Healing,
+		Protection:  response.Protection,
+	}
+
+	return res, nil
 }
 
-// Updating a Item
 func (s *externalservicesrvc) UpdateItem(ctx context.Context, p *externalservice.UpdateItemPayload) (err error) {
-	s.logger.Print("externalservice.update_item")
-	return
+	payload := &itemservice.UpdatePayload{
+		ID:          p.ID,
+		Name:        *p.Name,
+		Description: p.Description,
+		Damage:      *p.Damage,
+		Healing:     p.Healing,
+		Protection:  p.Protection,
+	}
+
+	err = s.itemServiceClient.UpdateItem(ctx, payload)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
-// Deleting a Item
 func (s *externalservicesrvc) DeleteItem(ctx context.Context, p *externalservice.DeleteItemPayload) (err error) {
-	s.logger.Print("externalservice.delete_item")
-	return
+	payload := &itemservice.DeletePayload{
+		ID: p.ID,
+	}
+
+	err = s.itemServiceClient.DeleteItem(ctx, payload)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
