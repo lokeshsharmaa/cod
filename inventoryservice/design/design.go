@@ -17,7 +17,6 @@ var _ = API("inventoryservice", func() {
 var _ = Service("inventoryservice", func() {
 	Description("The inventoryservice service handles CRUD operations for character inventories.")
 
-	// Define the "Get" method for retrieving an inventory by character ID
 	Method("Get", func() {
 		Description("Retrieve an inventory.")
 		Payload(func() {
@@ -47,7 +46,6 @@ var _ = Service("inventoryservice", func() {
 		})
 	})
 
-	// Define the "Delete" method for deleting an inventory
 	Method("Delete", func() {
 		Description("Delete an inventory by ID.")
 		Payload(func() {
