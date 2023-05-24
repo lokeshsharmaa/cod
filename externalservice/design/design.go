@@ -23,6 +23,12 @@ var Character = Type("Character", func() {
 	Field(5, "experience", Int, "Character experience")
 })
 
+var Inventory = Type("Inventory", func() {
+	Description("Character's Inventory")
+	Field(1, "character_id", Int, "Character ID")
+	Field(2, "items", ArrayOf(Int), "Item IDs")
+})
+
 var _ = Service("externalservice", func() {
 	Description("Contains API CRUD operations on characters, inventories, and items.")
 
@@ -89,6 +95,53 @@ var _ = Service("externalservice", func() {
 		HTTP(func() {
 			DELETE("/characters/{id}")
 			Response(StatusOK)
+		})
+	})
+
+	// Get character's inventory by ID
+	Method("get_inventory", func() {
+		Description("Fetching a Character's Inventory")
+		Payload(func() {
+			Field(1, "character_id", Int, "Character ID")
+			Required("character_id")
+		})
+		Result(Inventory)
+		Error("not_found", String, "Character not found")
+		HTTP(func() {
+			GET("/characters/{character_id}/inventory")
+			Response(StatusOK)
+		})
+	})
+
+	// Adding an item to character's inventory
+	Method("add_item_to_inventory", func() {
+		Description("Adding an Item to Character's Inventory")
+		Payload(func() {
+			Field(1, "character_id", Int, "Character ID")
+			Field(2, "item_id", Int, "Item ID")
+			Required("character_id", "item_id")
+		})
+		Error("not_found", String, "Character or Item not found")
+		Error("not_valid_time", String, "Item not valid")
+		HTTP(func() {
+			POST("/characters/{character_id}/inventory/items")
+			Response(StatusNoContent)
+		})
+	})
+
+	// Removing an item from character's inventory
+	Method("remove_item_from_inventory", func() {
+		Description("Removing an Item from Character's Inventory")
+		Payload(func() {
+			Field(1, "character_id", Int, "Character ID")
+			Field(2, "item_id", Int, "Item ID")
+			Required("character_id", "item_id")
+		})
+		Error("not_found", String, "Character or Item not found")
+		Error("not_valid_time", String, "Item not valid")
+		HTTP(func() {
+			DELETE("/characters/{character_id}/inventory/items/{item_id}")
+			Response(StatusNoContent)
 		})
 	})
 })
