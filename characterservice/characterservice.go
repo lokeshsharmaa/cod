@@ -64,6 +64,7 @@ func (s *characterservicesrvc) Update(ctx context.Context, p *characterservice.U
 		if _, ok := s.uniqueNameMapper[*p.Name]; ok {
 			return characterservice.UniqueConstraint("Name not Unique")
 		}
+		delete(s.uniqueNameMapper, *res.Name)
 	}
 	character := &characterservice.Character{
 		ID:          res.ID,
@@ -73,6 +74,7 @@ func (s *characterservicesrvc) Update(ctx context.Context, p *characterservice.U
 		Experience:  p.Experience,
 	}
 	s.idCharacterMapper[p.ID] = character
+	s.uniqueNameMapper[*p.Name] = true
 	return nil
 }
 
