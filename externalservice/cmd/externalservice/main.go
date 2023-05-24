@@ -2,10 +2,13 @@ package main
 
 import (
 	externalserviceapi "assignment_crossnokaye/cod/externalservice"
+	"assignment_crossnokaye/cod/externalservice/clients/characterservice"
 	externalservice "assignment_crossnokaye/cod/externalservice/gen/externalservice"
 	"context"
 	"flag"
 	"fmt"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"log"
 	"net"
 	"net/url"
@@ -31,6 +34,9 @@ func main() {
 	var (
 		logger *log.Logger
 	)
+	var (
+		characterServiceAddr = flag.String("characterservice", "localhost:8081", "Character service address")
+	)
 	{
 		logger = log.New(os.Stderr, "[externalserviceapi] ", log.Ltime)
 	}
@@ -40,7 +46,17 @@ func main() {
 		externalserviceSvc externalservice.Service
 	)
 	{
-		externalserviceSvc = externalserviceapi.NewExternalservice(logger)
+		ctx := context.Background()
+		characterServiceConn, err := grpc.DialContext(ctx, *characterServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()),
+			grpc.FailOnNonTempDialError(true),
+			grpc.WithBlock())
+		if err != nil {
+			logger.Panic(ctx, err, "failed to connect to locator")
+			os.Exit(1)
+		}
+		characterServiceClient := characterservice.New(characterServiceConn)
+		// 4. Create service & endpoints
+		externalserviceSvc = externalserviceapi.NewExternalservice(logger, characterServiceClient)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services
