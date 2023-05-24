@@ -1,6 +1,8 @@
 # Character on Duty (CoD)
 
-Character on Duty (CoD) is an application that allows users to create, manage, and interact with game characters, inventories, and items. It provides a set of API endpoints for performing CRUD operations on characters, inventories, and items.
+Character on Duty (CoD) is an application that allows users to create, manage, and interact with game characters,
+inventories, and items. It provides a set of API endpoints for performing CRUD operations on characters, inventories,
+and items.
 
 ## Features
 
@@ -10,9 +12,8 @@ Character on Duty (CoD) is an application that allows users to create, manage, a
 - Delete a character by its ID.
 - Get a character's inventory.
 - Add an item to a character's inventory.
-- Remove an item from a character's inventory. 
+- Remove an item from a character's inventory.
 - CRUD on items through item service
-
 
 ## Technologies Used
 
@@ -34,6 +35,7 @@ Character on Duty (CoD) is an application that allows users to create, manage, a
     make build 
 
 ## API Endpoints
+
 The following API endpoints are available:
 
 - POST /characters: Create a new character.
@@ -43,37 +45,44 @@ The following API endpoints are available:
 - GET /characters/{id}/inventory: Get a character's inventory.
 - POST /characters/{id}/inventory/items: Add an item to a character's inventory.
 - DELETE /characters/{id}/inventory/items/{itemID}: Remove an item from a character's inventory.
-
+- POST /items: Create a new item.
+- GET /items/{id}: Get an item by ID.
+- PUT /items/{id}: Update an item by ID.
+- DELETE /items/{id}: Delete an item by ID.
 
 ## Running Each Service
 
 ### Character service (grpc: localhost:8081)
+
 ```
 cd characterservice
 ./output/characterservice
 ```
 
 ### Inventory service (grpc: localhost:8082)
+
 ```
 cd inventoryservice
 ./output/inventoryservice
 ```   
 
 ### Item service (grpc: localhost:8083)
+
 ```
 cd itemservice
 ./output/item_service
 ```   
 
 ### External service (http: localhost:8080)
+
 ```
 cd externalservice
 ./output/externalservice
 ```  
 
 ## TODO
-1. Integrating Item service client
-2. Better Response Handling
+
+1.Better Response Handling
 
 ## Refactoring
 
