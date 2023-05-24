@@ -91,6 +91,14 @@ func TestGet(t *testing.T) {
 	itemID1 := 100
 	itemID2 := 101
 
+	getPayload := &inventoryservice.GetPayload{
+		ID: characterID,
+	}
+
+	response, _ := inventoryService.Get(context.Background(), getPayload)
+
+	assert.Nil(t, response.Items)
+
 	inventoryService.Add(context.Background(), &inventoryservice.AddPayload{
 		CharacterID: characterID,
 		ItemID:      &itemID1,
@@ -99,10 +107,8 @@ func TestGet(t *testing.T) {
 		CharacterID: characterID,
 		ItemID:      &itemID2,
 	})
-	getPayload := &inventoryservice.GetPayload{
-		ID: characterID,
-	}
-	response, _ := inventoryService.Get(context.Background(), getPayload)
+
+	response, _ = inventoryService.Get(context.Background(), getPayload)
 	assert.Equal(t, characterID, *response.CharacterID)
 	expected := []int{itemID1, itemID2}
 	sort.Ints(response.Items)
