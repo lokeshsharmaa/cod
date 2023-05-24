@@ -46,14 +46,19 @@ func New(cc *grpc.ClientConn) Client {
 
 func (c *client) GetInventory(ctx context.Context, g *GetPayload) (res *Inventory, err error) {
 
-	response, err := c.Get(ctx, inventoryservice.GetPayload{
+	response, err := c.Get(ctx, &inventoryservice.GetPayload{
 		ID: g.ID,
 	})
 
 	if err != nil {
 		return nil, err
 	}
-	res = response.(*Inventory)
+	inventory := response.(*inventoryservice.Inventory)
+
+	res = &Inventory{
+		CharacterID: inventory.CharacterID,
+		Items:       inventory.Items,
+	}
 	return res, nil
 }
 

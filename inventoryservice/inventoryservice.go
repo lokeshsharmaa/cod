@@ -17,11 +17,13 @@ func NewInventoryservice(logger *log.Logger) inventoryservice.Service {
 
 func (s *inventoryservicesrvc) Get(ctx context.Context, p *inventoryservice.GetPayload) (res *inventoryservice.Inventory, err error) {
 	items, found := s.characterItemsMapper[p.ID]
+	keys := make([]int, 0, len(items))
+
 	if !found {
-		return nil, inventoryservice.NotFound("character not found")
+		res = &inventoryservice.Inventory{CharacterID: &p.ID, Items: keys}
+		return res, nil
 	}
 
-	keys := make([]int, 0, len(items))
 	for k := range items {
 		keys = append(keys, k)
 	}
