@@ -16,26 +16,36 @@ func NewInventoryservice(logger *log.Logger) inventoryservice.Service {
 }
 
 func (s *inventoryservicesrvc) Get(ctx context.Context, p *inventoryservice.GetPayload) (res *inventoryservice.Inventory, err error) {
-	keys := make([]int, 0, len(s.characterItems[p.ID]))
-	for k := range s.characterItems[p.ID] {
+	items, ok := s.characterItems[p.ID]
+	if !ok {
+		return nil, inventoryservice.NotFound("character not found")
+	}
+
+	keys := make([]int, 0, len(items))
+	for k := range items {
 		keys = append(keys, k)
 	}
 	res = &inventoryservice.Inventory{CharacterID: &p.ID, Items: keys}
-	s.logger.Print("inventoryservice.Get")
 	return res, nil
 }
 
 func (s *inventoryservicesrvc) Add(ctx context.Context, p *inventoryservice.AddPayload) (err error) {
-	s.logger.Print("inventoryservice.add")
 	_, ok := s.characterItems[p.CharacterID]
 	if !ok {
-		s.characterItems[p.CharacterID] = make(map[int]bool)
+		return inventoryservice.NotFound("character not found")
 	}
 	s.characterItems[p.CharacterID][*p.ItemID] = true
 	return nil
 }
 
 func (s *inventoryservicesrvc) Delete(ctx context.Context, p *inventoryservice.DeletePayload) (err error) {
+	items, ok := s.characterItems[p.CharacterID]
+	if !ok {
+		return inventoryservice.NotFound("character not found")
+	}
+	if _, exists := items[p.ItemID]; !exists {
+		return inventoryservice.NotFound("item not found")
+	}
 	delete(s.characterItems[p.CharacterID], p.ItemID)
 	return nil
 }

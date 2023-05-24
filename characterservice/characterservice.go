@@ -3,11 +3,10 @@ package characterserviceapi
 import (
 	characterservice "assignment_crossnokaye/cod/characterservice/gen/characterservice"
 	"context"
+	"fmt"
 	"log"
 )
 
-// characterservice service example implementation.
-// The example methods log the requests and return zero values.
 type characterservicesrvc struct {
 	logger            *log.Logger
 	index             int
@@ -15,21 +14,20 @@ type characterservicesrvc struct {
 	uniqueNameMapper  map[string]bool
 }
 
-// NewCharacterservice returns the characterservice service implementation.
 func NewCharacterservice(logger *log.Logger) characterservice.Service {
-	return &characterservicesrvc{logger: logger,
+	return &characterservicesrvc{
+		logger:            logger,
 		idCharacterMapper: make(map[int]*characterservice.Character),
-		uniqueNameMapper:  make(map[string]bool)}
+		uniqueNameMapper:  make(map[string]bool),
+	}
 }
 
-// Create a new character.
 func (s *characterservicesrvc) Create(ctx context.Context, p *characterservice.CreatePayload) (res int, err error) {
-	s.logger.Print("characterservice.Create")
-	if _, ok := s.uniqueNameMapper[p.Name]; ok {
-		return 0, characterservice.UniqueConstraint("Name not unique")
+	if !s.isNameUnique(p.Name) {
+		return 0, characterservice.UniqueConstraint(fmt.Sprintf("Name '%s' is not unique", p.Name))
 	}
-	// TODO: To store INDEX in DB
-	s.index += 1
+
+	s.index++
 	currentIndex := s.index
 	character := &characterservice.Character{
 		ID:          &currentIndex,
@@ -40,52 +38,50 @@ func (s *characterservicesrvc) Create(ctx context.Context, p *characterservice.C
 	}
 	s.uniqueNameMapper[p.Name] = true
 	s.idCharacterMapper[currentIndex] = character
+
 	return s.index, nil
 }
 
-// Retrieve a character by ID.
 func (s *characterservicesrvc) Get(ctx context.Context, p *characterservice.GetPayload) (res *characterservice.Character, err error) {
-	s.logger.Print("characterservice.Get")
-	res, ok := s.idCharacterMapper[p.ID]
+	character, ok := s.idCharacterMapper[p.ID]
 	if !ok {
-		return nil, characterservice.NotFound("Not Found")
+		return nil, characterservice.NotFound(fmt.Sprintf("Character with ID '%d' not found", p.ID))
 	}
-	return res, nil
+	return character, nil
 }
 
-// Update a character.
 func (s *characterservicesrvc) Update(ctx context.Context, p *characterservice.UpdatePayload) (err error) {
-	s.logger.Print("characterservice.Update")
-	res, ok := s.idCharacterMapper[p.ID]
+	character, ok := s.idCharacterMapper[p.ID]
 	if !ok {
-		return characterservice.NotFound("Not Found")
+		return characterservice.NotFound(fmt.Sprintf("Character with ID '%d' not found", p.ID))
 	}
-	if res.Name != p.Name {
-		if _, ok := s.uniqueNameMapper[*p.Name]; ok {
-			return characterservice.UniqueConstraint("Name not Unique")
+
+	if *character.Name != *p.Name {
+		if !s.isNameUnique(*p.Name) {
+			return characterservice.UniqueConstraint(fmt.Sprintf("Name '%s' is not unique", *p.Name))
 		}
-		delete(s.uniqueNameMapper, *res.Name)
+		delete(s.uniqueNameMapper, *character.Name)
 	}
-	character := &characterservice.Character{
-		ID:          res.ID,
-		Name:        p.Name,
-		Description: p.Description,
-		Health:      p.Health,
-		Experience:  p.Experience,
-	}
-	s.idCharacterMapper[p.ID] = character
-	s.uniqueNameMapper[*p.Name] = true
+	character.Name = p.Name
+	character.Description = p.Description
+	character.Health = p.Health
+	character.Experience = p.Experience
+
 	return nil
 }
 
-// Delete a character by ID.
 func (s *characterservicesrvc) Delete(ctx context.Context, p *characterservice.DeletePayload) (err error) {
-	s.logger.Print("characterservice.Delete")
-	res, ok := s.idCharacterMapper[p.ID]
+	character, ok := s.idCharacterMapper[p.ID]
 	if !ok {
-		return characterservice.NotFound("Not Found")
+		return characterservice.NotFound(fmt.Sprintf("Character with ID '%d' not found", p.ID))
 	}
+
 	delete(s.idCharacterMapper, p.ID)
-	delete(s.uniqueNameMapper, *res.Name)
+	delete(s.uniqueNameMapper, *character.Name)
 	return nil
+}
+
+func (s *characterservicesrvc) isNameUnique(name string) bool {
+	_, res := s.uniqueNameMapper[name]
+	return !res
 }

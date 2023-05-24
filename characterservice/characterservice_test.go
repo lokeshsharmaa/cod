@@ -11,7 +11,6 @@ import (
 )
 
 func newTestService(t *testing.T) characterservice.Service {
-	t.Helper()
 	logger := log.New(io.Discard, "", 0)
 	return NewCharacterservice(logger)
 }
@@ -159,7 +158,7 @@ func TestUniqueConstraints(t *testing.T) {
 	characterID, _ := service.Create(ctx, createPayload)
 	_, err := service.Create(ctx, createPayload)
 
-	assert.Equal(t, err.Error(), "Name not unique")
+	assert.Equal(t, err, characterservice.UniqueConstraint("Name 'Test' is not unique"))
 
 	deletePayload := &characterservice.DeletePayload{
 		ID: characterID,
