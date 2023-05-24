@@ -27,6 +27,14 @@ type Service interface {
 	AddItemToInventory(context.Context, *AddItemToInventoryPayload) (err error)
 	// Removing an Item from Character's Inventory
 	RemoveItemFromInventory(context.Context, *RemoveItemFromInventoryPayload) (err error)
+	// Creating a new Item
+	CreateItem(context.Context, *CreateItemPayload) (res *Item, err error)
+	// Fetching a Item
+	GetItem(context.Context, *GetItemPayload) (res *Item, err error)
+	// Updating a Item
+	UpdateItem(context.Context, *UpdateItemPayload) (err error)
+	// Deleting a Item
+	DeleteItem(context.Context, *DeleteItemPayload) (err error)
 }
 
 // ServiceName is the name of the service as defined in the design. This is the
@@ -37,7 +45,7 @@ const ServiceName = "externalservice"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [7]string{"create_character", "get_character", "update_character", "delete_character", "get_inventory", "add_item_to_inventory", "remove_item_from_inventory"}
+var MethodNames = [11]string{"create_character", "get_character", "update_character", "delete_character", "get_inventory", "add_item_to_inventory", "remove_item_from_inventory", "create_item", "get_item", "update_item", "delete_item"}
 
 // AddItemToInventoryPayload is the payload type of the externalservice service
 // add_item_to_inventory method.
@@ -76,10 +84,32 @@ type CreateCharacterPayload struct {
 	Experience int
 }
 
+// CreateItemPayload is the payload type of the externalservice service
+// create_item method.
+type CreateItemPayload struct {
+	// Item name
+	Name string
+	// Item description
+	Description *string
+	// Item damage
+	Damage int
+	// Item healing
+	Healing *int
+	// Item protection
+	Protection *int
+}
+
 // DeleteCharacterPayload is the payload type of the externalservice service
 // delete_character method.
 type DeleteCharacterPayload struct {
 	// Character ID
+	ID int
+}
+
+// DeleteItemPayload is the payload type of the externalservice service
+// delete_item method.
+type DeleteItemPayload struct {
+	// Item ID
 	ID int
 }
 
@@ -97,6 +127,13 @@ type GetInventoryPayload struct {
 	CharacterID int
 }
 
+// GetItemPayload is the payload type of the externalservice service get_item
+// method.
+type GetItemPayload struct {
+	// Item ID
+	ID int
+}
+
 // Inventory is the result type of the externalservice service get_inventory
 // method.
 type Inventory struct {
@@ -104,6 +141,22 @@ type Inventory struct {
 	CharacterID *int
 	// Item IDs
 	Items []int
+}
+
+// Item is the result type of the externalservice service create_item method.
+type Item struct {
+	// Item ID
+	ID *int
+	// Item name
+	Name *string
+	// Item description
+	Description *string
+	// Item damage
+	Damage *int
+	// Item healing
+	Healing *int
+	// Item protection
+	Protection *int
 }
 
 // RemoveItemFromInventoryPayload is the payload type of the externalservice
@@ -130,6 +183,21 @@ type UpdateCharacterPayload struct {
 	Experience *int
 }
 
+// UpdateItemPayload is the payload type of the externalservice service
+// update_item method.
+type UpdateItemPayload struct {
+	// Item ID
+	ID int
+	// Item name
+	Name *string
+	// Item description
+	Description *string
+	// Item health
+	Health *int
+	// Item experience
+	Experience *int
+}
+
 // Bad request
 type BadRequest string
 
@@ -137,7 +205,7 @@ type BadRequest string
 type NotFound string
 
 // Item not valid
-type NotValidTime string
+type NotValidItem string
 
 // Name not unique
 type UniqueConstraint string
@@ -177,20 +245,20 @@ func (e NotFound) GoaErrorName() string {
 }
 
 // Error returns an error description.
-func (e NotValidTime) Error() string {
+func (e NotValidItem) Error() string {
 	return "Item not valid"
 }
 
-// ErrorName returns "not_valid_time".
+// ErrorName returns "not_valid_item".
 //
 // Deprecated: Use GoaErrorName - https://github.com/goadesign/goa/issues/3105
-func (e NotValidTime) ErrorName() string {
+func (e NotValidItem) ErrorName() string {
 	return e.GoaErrorName()
 }
 
-// GoaErrorName returns "not_valid_time".
-func (e NotValidTime) GoaErrorName() string {
-	return "not_valid_time"
+// GoaErrorName returns "not_valid_item".
+func (e NotValidItem) GoaErrorName() string {
+	return "not_valid_item"
 }
 
 // Error returns an error description.

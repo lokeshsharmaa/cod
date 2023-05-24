@@ -22,17 +22,17 @@ import (
 //
 //	command (subcommand1|subcommand2|...)
 func UsageCommands() string {
-	return `externalservice (create-character|get-character|update-character|delete-character|get-inventory|add-item-to-inventory|remove-item-from-inventory)
+	return `externalservice (create-character|get-character|update-character|delete-character|get-inventory|add-item-to-inventory|remove-item-from-inventory|create-item|get-item|update-item|delete-item)
 `
 }
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
 	return os.Args[0] + ` externalservice create-character --body '{
-      "description": "Quia officiis sunt qui quia.",
-      "experience": 8516222454781191823,
-      "health": 4571870516214136443,
-      "name": "Vero omnis illum ratione pariatur laboriosam quia."
+      "description": "Ut quia accusantium at amet ut.",
+      "experience": 3689643759782600333,
+      "health": 2497093007532229202,
+      "name": "Qui aperiam pariatur voluptatem ut mollitia est."
    }'` + "\n" +
 		""
 }
@@ -72,6 +72,19 @@ func ParseEndpoint(
 		externalserviceRemoveItemFromInventoryFlags           = flag.NewFlagSet("remove-item-from-inventory", flag.ExitOnError)
 		externalserviceRemoveItemFromInventoryCharacterIDFlag = externalserviceRemoveItemFromInventoryFlags.String("character-id", "REQUIRED", "Character ID")
 		externalserviceRemoveItemFromInventoryItemIDFlag      = externalserviceRemoveItemFromInventoryFlags.String("item-id", "REQUIRED", "Item ID")
+
+		externalserviceCreateItemFlags    = flag.NewFlagSet("create-item", flag.ExitOnError)
+		externalserviceCreateItemBodyFlag = externalserviceCreateItemFlags.String("body", "REQUIRED", "")
+
+		externalserviceGetItemFlags  = flag.NewFlagSet("get-item", flag.ExitOnError)
+		externalserviceGetItemIDFlag = externalserviceGetItemFlags.String("id", "REQUIRED", "Item ID")
+
+		externalserviceUpdateItemFlags    = flag.NewFlagSet("update-item", flag.ExitOnError)
+		externalserviceUpdateItemBodyFlag = externalserviceUpdateItemFlags.String("body", "REQUIRED", "")
+		externalserviceUpdateItemIDFlag   = externalserviceUpdateItemFlags.String("id", "REQUIRED", "Item ID")
+
+		externalserviceDeleteItemFlags  = flag.NewFlagSet("delete-item", flag.ExitOnError)
+		externalserviceDeleteItemIDFlag = externalserviceDeleteItemFlags.String("id", "REQUIRED", "Item ID")
 	)
 	externalserviceFlags.Usage = externalserviceUsage
 	externalserviceCreateCharacterFlags.Usage = externalserviceCreateCharacterUsage
@@ -81,6 +94,10 @@ func ParseEndpoint(
 	externalserviceGetInventoryFlags.Usage = externalserviceGetInventoryUsage
 	externalserviceAddItemToInventoryFlags.Usage = externalserviceAddItemToInventoryUsage
 	externalserviceRemoveItemFromInventoryFlags.Usage = externalserviceRemoveItemFromInventoryUsage
+	externalserviceCreateItemFlags.Usage = externalserviceCreateItemUsage
+	externalserviceGetItemFlags.Usage = externalserviceGetItemUsage
+	externalserviceUpdateItemFlags.Usage = externalserviceUpdateItemUsage
+	externalserviceDeleteItemFlags.Usage = externalserviceDeleteItemUsage
 
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
 		return nil, nil, err
@@ -137,6 +154,18 @@ func ParseEndpoint(
 			case "remove-item-from-inventory":
 				epf = externalserviceRemoveItemFromInventoryFlags
 
+			case "create-item":
+				epf = externalserviceCreateItemFlags
+
+			case "get-item":
+				epf = externalserviceGetItemFlags
+
+			case "update-item":
+				epf = externalserviceUpdateItemFlags
+
+			case "delete-item":
+				epf = externalserviceDeleteItemFlags
+
 			}
 
 		}
@@ -183,6 +212,18 @@ func ParseEndpoint(
 			case "remove-item-from-inventory":
 				endpoint = c.RemoveItemFromInventory()
 				data, err = externalservicec.BuildRemoveItemFromInventoryPayload(*externalserviceRemoveItemFromInventoryCharacterIDFlag, *externalserviceRemoveItemFromInventoryItemIDFlag)
+			case "create-item":
+				endpoint = c.CreateItem()
+				data, err = externalservicec.BuildCreateItemPayload(*externalserviceCreateItemBodyFlag)
+			case "get-item":
+				endpoint = c.GetItem()
+				data, err = externalservicec.BuildGetItemPayload(*externalserviceGetItemIDFlag)
+			case "update-item":
+				endpoint = c.UpdateItem()
+				data, err = externalservicec.BuildUpdateItemPayload(*externalserviceUpdateItemBodyFlag, *externalserviceUpdateItemIDFlag)
+			case "delete-item":
+				endpoint = c.DeleteItem()
+				data, err = externalservicec.BuildDeleteItemPayload(*externalserviceDeleteItemIDFlag)
 			}
 		}
 	}
@@ -208,6 +249,10 @@ COMMAND:
     get-inventory: Fetching a Character's Inventory
     add-item-to-inventory: Adding an Item to Character's Inventory
     remove-item-from-inventory: Removing an Item from Character's Inventory
+    create-item: Creating a new Item
+    get-item: Fetching a Item
+    update-item: Updating a Item
+    delete-item: Deleting a Item
 
 Additional help:
     %[1]s externalservice COMMAND --help
@@ -221,10 +266,10 @@ Creating a new Character
 
 Example:
     %[1]s externalservice create-character --body '{
-      "description": "Quia officiis sunt qui quia.",
-      "experience": 8516222454781191823,
-      "health": 4571870516214136443,
-      "name": "Vero omnis illum ratione pariatur laboriosam quia."
+      "description": "Ut quia accusantium at amet ut.",
+      "experience": 3689643759782600333,
+      "health": 2497093007532229202,
+      "name": "Qui aperiam pariatur voluptatem ut mollitia est."
    }'
 `, os.Args[0])
 }
@@ -236,7 +281,7 @@ Fetching a Character
     -id INT: Character ID
 
 Example:
-    %[1]s externalservice get-character --id 8489983945726841594
+    %[1]s externalservice get-character --id 1591572569422129497
 `, os.Args[0])
 }
 
@@ -249,11 +294,11 @@ Updating a Character
 
 Example:
     %[1]s externalservice update-character --body '{
-      "description": "Ut mollitia est.",
-      "experience": 5568484907136742814,
-      "health": 2968286776226512618,
-      "name": "Dolore voluptas distinctio qui aperiam pariatur."
-   }' --id 4151177939316041850
+      "description": "Facilis eligendi soluta similique illum reiciendis.",
+      "experience": 4429716038026485218,
+      "health": 7231771245341319977,
+      "name": "Eveniet rerum voluptatem."
+   }' --id 2823621889944725328
 `, os.Args[0])
 }
 
@@ -264,7 +309,7 @@ Deleting a Character
     -id INT: Character ID
 
 Example:
-    %[1]s externalservice delete-character --id 9038319797943560120
+    %[1]s externalservice delete-character --id 2304153007448072890
 `, os.Args[0])
 }
 
@@ -275,7 +320,7 @@ Fetching a Character's Inventory
     -character-id INT: Character ID
 
 Example:
-    %[1]s externalservice get-inventory --character-id 7504908446685337858
+    %[1]s externalservice get-inventory --character-id 2154155204521645316
 `, os.Args[0])
 }
 
@@ -288,8 +333,8 @@ Adding an Item to Character's Inventory
 
 Example:
     %[1]s externalservice add-item-to-inventory --body '{
-      "item_id": 8734216661098503449
-   }' --character-id 3284904739076678877
+      "item_id": 568441057683699993
+   }' --character-id 5667695314406382572
 `, os.Args[0])
 }
 
@@ -301,6 +346,62 @@ Removing an Item from Character's Inventory
     -item-id INT: Item ID
 
 Example:
-    %[1]s externalservice remove-item-from-inventory --character-id 1912081011969081114 --item-id 3592539134250285414
+    %[1]s externalservice remove-item-from-inventory --character-id 3326990369775092063 --item-id 5725183425841763447
+`, os.Args[0])
+}
+
+func externalserviceCreateItemUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] externalservice create-item -body JSON
+
+Creating a new Item
+    -body JSON: 
+
+Example:
+    %[1]s externalservice create-item --body '{
+      "damage": 8526212768874492114,
+      "description": "Consequuntur sit.",
+      "healing": 8265794075702108861,
+      "name": "Libero maxime voluptatem aut.",
+      "protection": 4780250306447570797
+   }'
+`, os.Args[0])
+}
+
+func externalserviceGetItemUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] externalservice get-item -id INT
+
+Fetching a Item
+    -id INT: Item ID
+
+Example:
+    %[1]s externalservice get-item --id 7732534785951416741
+`, os.Args[0])
+}
+
+func externalserviceUpdateItemUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] externalservice update-item -body JSON -id INT
+
+Updating a Item
+    -body JSON: 
+    -id INT: Item ID
+
+Example:
+    %[1]s externalservice update-item --body '{
+      "description": "In iure magnam.",
+      "experience": 3240580154618403769,
+      "health": 4215801335920168977,
+      "name": "Omnis quia consequatur."
+   }' --id 6022789432163838060
+`, os.Args[0])
+}
+
+func externalserviceDeleteItemUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] externalservice delete-item -id INT
+
+Deleting a Item
+    -id INT: Item ID
+
+Example:
+    %[1]s externalservice delete-item --id 8060972358180548241
 `, os.Args[0])
 }

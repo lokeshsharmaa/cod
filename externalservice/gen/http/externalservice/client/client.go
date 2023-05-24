@@ -45,6 +45,22 @@ type Client struct {
 	// remove_item_from_inventory endpoint.
 	RemoveItemFromInventoryDoer goahttp.Doer
 
+	// CreateItem Doer is the HTTP client used to make requests to the create_item
+	// endpoint.
+	CreateItemDoer goahttp.Doer
+
+	// GetItem Doer is the HTTP client used to make requests to the get_item
+	// endpoint.
+	GetItemDoer goahttp.Doer
+
+	// UpdateItem Doer is the HTTP client used to make requests to the update_item
+	// endpoint.
+	UpdateItemDoer goahttp.Doer
+
+	// DeleteItem Doer is the HTTP client used to make requests to the delete_item
+	// endpoint.
+	DeleteItemDoer goahttp.Doer
+
 	// RestoreResponseBody controls whether the response bodies are reset after
 	// decoding so they can be read again.
 	RestoreResponseBody bool
@@ -73,6 +89,10 @@ func NewClient(
 		GetInventoryDoer:            doer,
 		AddItemToInventoryDoer:      doer,
 		RemoveItemFromInventoryDoer: doer,
+		CreateItemDoer:              doer,
+		GetItemDoer:                 doer,
+		UpdateItemDoer:              doer,
+		DeleteItemDoer:              doer,
 		RestoreResponseBody:         restoreBody,
 		scheme:                      scheme,
 		host:                        host,
@@ -224,6 +244,92 @@ func (c *Client) RemoveItemFromInventory() goa.Endpoint {
 		resp, err := c.RemoveItemFromInventoryDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("externalservice", "remove_item_from_inventory", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// CreateItem returns an endpoint that makes HTTP requests to the
+// externalservice service create_item server.
+func (c *Client) CreateItem() goa.Endpoint {
+	var (
+		encodeRequest  = EncodeCreateItemRequest(c.encoder)
+		decodeResponse = DecodeCreateItemResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v any) (any, error) {
+		req, err := c.BuildCreateItemRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.CreateItemDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("externalservice", "create_item", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// GetItem returns an endpoint that makes HTTP requests to the externalservice
+// service get_item server.
+func (c *Client) GetItem() goa.Endpoint {
+	var (
+		decodeResponse = DecodeGetItemResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v any) (any, error) {
+		req, err := c.BuildGetItemRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.GetItemDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("externalservice", "get_item", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// UpdateItem returns an endpoint that makes HTTP requests to the
+// externalservice service update_item server.
+func (c *Client) UpdateItem() goa.Endpoint {
+	var (
+		encodeRequest  = EncodeUpdateItemRequest(c.encoder)
+		decodeResponse = DecodeUpdateItemResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v any) (any, error) {
+		req, err := c.BuildUpdateItemRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.UpdateItemDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("externalservice", "update_item", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// DeleteItem returns an endpoint that makes HTTP requests to the
+// externalservice service delete_item server.
+func (c *Client) DeleteItem() goa.Endpoint {
+	var (
+		decodeResponse = DecodeDeleteItemResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v any) (any, error) {
+		req, err := c.BuildDeleteItemRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.DeleteItemDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("externalservice", "delete_item", err)
 		}
 		return decodeResponse(resp)
 	}

@@ -29,6 +29,16 @@ var Inventory = Type("Inventory", func() {
 	Field(2, "items", ArrayOf(Int), "Item IDs")
 })
 
+var Item = Type("Item", func() {
+	Description("Attributes of an item")
+	Field(1, "id", Int, "Item ID")
+	Field(2, "name", String, "Item name")
+	Field(3, "description", String, "Item description")
+	Field(4, "damage", Int, "Item damage")
+	Field(5, "healing", Int, "Item healing")
+	Field(6, "protection", Int, "Item protection")
+})
+
 var _ = Service("externalservice", func() {
 	Description("Contains API CRUD operations on characters, inventories, and items.")
 
@@ -122,7 +132,7 @@ var _ = Service("externalservice", func() {
 			Required("character_id", "item_id")
 		})
 		Error("not_found", String, "Character or Item not found")
-		Error("not_valid_time", String, "Item not valid")
+		Error("not_valid_item", String, "Item not valid")
 		HTTP(func() {
 			POST("/characters/{character_id}/inventory/items")
 			Response(StatusNoContent)
@@ -138,10 +148,77 @@ var _ = Service("externalservice", func() {
 			Required("character_id", "item_id")
 		})
 		Error("not_found", String, "Character or Item not found")
-		Error("not_valid_time", String, "Item not valid")
+		Error("not_valid_item", String, "Item not valid")
 		HTTP(func() {
 			DELETE("/characters/{character_id}/inventory/items/{item_id}")
 			Response(StatusNoContent)
+		})
+	})
+
+	// Creating item with unique name and required payload
+	Method("create_item", func() {
+		Description("Creating a new Item")
+		Payload(func() {
+			Field(1, "name", String, "Item name")
+			Field(2, "description", String, "Item description")
+			Field(3, "damage", Int, "Item damage")
+			Field(4, "healing", Int, "Item healing")
+			Field(5, "protection", Int, "Item protection")
+			Required("name", "damage")
+		})
+		Result(Item)
+		Error("bad_request", String, "Bad request")
+		Error("unique_constraint", String, "Name not unique")
+		HTTP(func() {
+			POST("/items")
+			Response(StatusCreated)
+		})
+	})
+
+	// Get a item by ID
+	Method("get_item", func() {
+		Description("Fetching a Item")
+		Payload(func() {
+			Field(1, "id", Int, "Item ID")
+			Required("id")
+		})
+		Result(Item)
+		Error("not_found", String, "Item not found")
+		HTTP(func() {
+			GET("/items/{id}")
+			Response(StatusOK)
+		})
+	})
+
+	// Updating a Item by ID
+	Method("update_item", func() {
+		Description("Updating a Item")
+		Payload(func() {
+			Field(1, "id", Int, "Item ID")
+			Field(2, "name", String, "Item name")
+			Field(3, "description", String, "Item description")
+			Field(4, "health", Int, "Item health")
+			Field(5, "experience", Int, "Item experience")
+			Required("id")
+		})
+		Error("not_found", String, "Item not found")
+		HTTP(func() {
+			PUT("/items/{id}")
+			Response(StatusOK)
+		})
+	})
+
+	// Deleting a Item by ID
+	Method("delete_item", func() {
+		Description("Deleting a Item")
+		Payload(func() {
+			Field(1, "id", Int, "Item ID")
+			Required("id")
+		})
+		Error("not_found", String, "Item not found")
+		HTTP(func() {
+			DELETE("/items/{id}")
+			Response(StatusOK)
 		})
 	})
 })

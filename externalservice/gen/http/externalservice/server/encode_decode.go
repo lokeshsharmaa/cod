@@ -311,3 +311,162 @@ func DecodeRemoveItemFromInventoryRequest(mux goahttp.Muxer, decoder func(*http.
 		return payload, nil
 	}
 }
+
+// EncodeCreateItemResponse returns an encoder for responses returned by the
+// externalservice create_item endpoint.
+func EncodeCreateItemResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {
+	return func(ctx context.Context, w http.ResponseWriter, v any) error {
+		res, _ := v.(*externalservice.Item)
+		enc := encoder(ctx, w)
+		body := NewCreateItemResponseBody(res)
+		w.WriteHeader(http.StatusCreated)
+		return enc.Encode(body)
+	}
+}
+
+// DecodeCreateItemRequest returns a decoder for requests sent to the
+// externalservice create_item endpoint.
+func DecodeCreateItemRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (any, error) {
+	return func(r *http.Request) (any, error) {
+		var (
+			body CreateItemRequestBody
+			err  error
+		)
+		err = decoder(r).Decode(&body)
+		if err != nil {
+			if err == io.EOF {
+				return nil, goa.MissingPayloadError()
+			}
+			return nil, goa.DecodePayloadError(err.Error())
+		}
+		err = ValidateCreateItemRequestBody(&body)
+		if err != nil {
+			return nil, err
+		}
+		payload := NewCreateItemPayload(&body)
+
+		return payload, nil
+	}
+}
+
+// EncodeGetItemResponse returns an encoder for responses returned by the
+// externalservice get_item endpoint.
+func EncodeGetItemResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {
+	return func(ctx context.Context, w http.ResponseWriter, v any) error {
+		res, _ := v.(*externalservice.Item)
+		enc := encoder(ctx, w)
+		body := NewGetItemResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// DecodeGetItemRequest returns a decoder for requests sent to the
+// externalservice get_item endpoint.
+func DecodeGetItemRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (any, error) {
+	return func(r *http.Request) (any, error) {
+		var (
+			id  int
+			err error
+
+			params = mux.Vars(r)
+		)
+		{
+			idRaw := params["id"]
+			v, err2 := strconv.ParseInt(idRaw, 10, strconv.IntSize)
+			if err2 != nil {
+				err = goa.MergeErrors(err, goa.InvalidFieldTypeError("id", idRaw, "integer"))
+			}
+			id = int(v)
+		}
+		if err != nil {
+			return nil, err
+		}
+		payload := NewGetItemPayload(id)
+
+		return payload, nil
+	}
+}
+
+// EncodeUpdateItemResponse returns an encoder for responses returned by the
+// externalservice update_item endpoint.
+func EncodeUpdateItemResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {
+	return func(ctx context.Context, w http.ResponseWriter, v any) error {
+		w.WriteHeader(http.StatusOK)
+		return nil
+	}
+}
+
+// DecodeUpdateItemRequest returns a decoder for requests sent to the
+// externalservice update_item endpoint.
+func DecodeUpdateItemRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (any, error) {
+	return func(r *http.Request) (any, error) {
+		var (
+			body UpdateItemRequestBody
+			err  error
+		)
+		err = decoder(r).Decode(&body)
+		if err != nil {
+			if err == io.EOF {
+				return nil, goa.MissingPayloadError()
+			}
+			return nil, goa.DecodePayloadError(err.Error())
+		}
+
+		var (
+			id int
+
+			params = mux.Vars(r)
+		)
+		{
+			idRaw := params["id"]
+			v, err2 := strconv.ParseInt(idRaw, 10, strconv.IntSize)
+			if err2 != nil {
+				err = goa.MergeErrors(err, goa.InvalidFieldTypeError("id", idRaw, "integer"))
+			}
+			id = int(v)
+		}
+		if err != nil {
+			return nil, err
+		}
+		payload := NewUpdateItemPayload(&body, id)
+
+		return payload, nil
+	}
+}
+
+// EncodeDeleteItemResponse returns an encoder for responses returned by the
+// externalservice delete_item endpoint.
+func EncodeDeleteItemResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {
+	return func(ctx context.Context, w http.ResponseWriter, v any) error {
+		w.WriteHeader(http.StatusOK)
+		return nil
+	}
+}
+
+// DecodeDeleteItemRequest returns a decoder for requests sent to the
+// externalservice delete_item endpoint.
+func DecodeDeleteItemRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (any, error) {
+	return func(r *http.Request) (any, error) {
+		var (
+			id  int
+			err error
+
+			params = mux.Vars(r)
+		)
+		{
+			idRaw := params["id"]
+			v, err2 := strconv.ParseInt(idRaw, 10, strconv.IntSize)
+			if err2 != nil {
+				err = goa.MergeErrors(err, goa.InvalidFieldTypeError("id", idRaw, "integer"))
+			}
+			id = int(v)
+		}
+		if err != nil {
+			return nil, err
+		}
+		payload := NewDeleteItemPayload(id)
+
+		return payload, nil
+	}
+}

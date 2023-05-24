@@ -22,10 +22,14 @@ type Client struct {
 	GetInventoryEndpoint            goa.Endpoint
 	AddItemToInventoryEndpoint      goa.Endpoint
 	RemoveItemFromInventoryEndpoint goa.Endpoint
+	CreateItemEndpoint              goa.Endpoint
+	GetItemEndpoint                 goa.Endpoint
+	UpdateItemEndpoint              goa.Endpoint
+	DeleteItemEndpoint              goa.Endpoint
 }
 
 // NewClient initializes a "externalservice" service client given the endpoints.
-func NewClient(createCharacter, getCharacter, updateCharacter, deleteCharacter, getInventory, addItemToInventory, removeItemFromInventory goa.Endpoint) *Client {
+func NewClient(createCharacter, getCharacter, updateCharacter, deleteCharacter, getInventory, addItemToInventory, removeItemFromInventory, createItem, getItem, updateItem, deleteItem goa.Endpoint) *Client {
 	return &Client{
 		CreateCharacterEndpoint:         createCharacter,
 		GetCharacterEndpoint:            getCharacter,
@@ -34,6 +38,10 @@ func NewClient(createCharacter, getCharacter, updateCharacter, deleteCharacter, 
 		GetInventoryEndpoint:            getInventory,
 		AddItemToInventoryEndpoint:      addItemToInventory,
 		RemoveItemFromInventoryEndpoint: removeItemFromInventory,
+		CreateItemEndpoint:              createItem,
+		GetItemEndpoint:                 getItem,
+		UpdateItemEndpoint:              updateItem,
+		DeleteItemEndpoint:              deleteItem,
 	}
 }
 
@@ -104,7 +112,7 @@ func (c *Client) GetInventory(ctx context.Context, p *GetInventoryPayload) (res 
 // "externalservice" service.
 // AddItemToInventory may return the following errors:
 //   - "not_found" (type NotFound)
-//   - "not_valid_time" (type NotValidTime)
+//   - "not_valid_item" (type NotValidItem)
 //   - error: internal error
 func (c *Client) AddItemToInventory(ctx context.Context, p *AddItemToInventoryPayload) (err error) {
 	_, err = c.AddItemToInventoryEndpoint(ctx, p)
@@ -115,9 +123,54 @@ func (c *Client) AddItemToInventory(ctx context.Context, p *AddItemToInventoryPa
 // the "externalservice" service.
 // RemoveItemFromInventory may return the following errors:
 //   - "not_found" (type NotFound)
-//   - "not_valid_time" (type NotValidTime)
+//   - "not_valid_item" (type NotValidItem)
 //   - error: internal error
 func (c *Client) RemoveItemFromInventory(ctx context.Context, p *RemoveItemFromInventoryPayload) (err error) {
 	_, err = c.RemoveItemFromInventoryEndpoint(ctx, p)
+	return
+}
+
+// CreateItem calls the "create_item" endpoint of the "externalservice" service.
+// CreateItem may return the following errors:
+//   - "bad_request" (type BadRequest)
+//   - "unique_constraint" (type UniqueConstraint)
+//   - error: internal error
+func (c *Client) CreateItem(ctx context.Context, p *CreateItemPayload) (res *Item, err error) {
+	var ires any
+	ires, err = c.CreateItemEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*Item), nil
+}
+
+// GetItem calls the "get_item" endpoint of the "externalservice" service.
+// GetItem may return the following errors:
+//   - "not_found" (type NotFound)
+//   - error: internal error
+func (c *Client) GetItem(ctx context.Context, p *GetItemPayload) (res *Item, err error) {
+	var ires any
+	ires, err = c.GetItemEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*Item), nil
+}
+
+// UpdateItem calls the "update_item" endpoint of the "externalservice" service.
+// UpdateItem may return the following errors:
+//   - "not_found" (type NotFound)
+//   - error: internal error
+func (c *Client) UpdateItem(ctx context.Context, p *UpdateItemPayload) (err error) {
+	_, err = c.UpdateItemEndpoint(ctx, p)
+	return
+}
+
+// DeleteItem calls the "delete_item" endpoint of the "externalservice" service.
+// DeleteItem may return the following errors:
+//   - "not_found" (type NotFound)
+//   - error: internal error
+func (c *Client) DeleteItem(ctx context.Context, p *DeleteItemPayload) (err error) {
+	_, err = c.DeleteItemEndpoint(ctx, p)
 	return
 }

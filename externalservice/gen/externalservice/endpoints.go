@@ -22,6 +22,10 @@ type Endpoints struct {
 	GetInventory            goa.Endpoint
 	AddItemToInventory      goa.Endpoint
 	RemoveItemFromInventory goa.Endpoint
+	CreateItem              goa.Endpoint
+	GetItem                 goa.Endpoint
+	UpdateItem              goa.Endpoint
+	DeleteItem              goa.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "externalservice" service with
@@ -35,6 +39,10 @@ func NewEndpoints(s Service) *Endpoints {
 		GetInventory:            NewGetInventoryEndpoint(s),
 		AddItemToInventory:      NewAddItemToInventoryEndpoint(s),
 		RemoveItemFromInventory: NewRemoveItemFromInventoryEndpoint(s),
+		CreateItem:              NewCreateItemEndpoint(s),
+		GetItem:                 NewGetItemEndpoint(s),
+		UpdateItem:              NewUpdateItemEndpoint(s),
+		DeleteItem:              NewDeleteItemEndpoint(s),
 	}
 }
 
@@ -48,6 +56,10 @@ func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 	e.GetInventory = m(e.GetInventory)
 	e.AddItemToInventory = m(e.AddItemToInventory)
 	e.RemoveItemFromInventory = m(e.RemoveItemFromInventory)
+	e.CreateItem = m(e.CreateItem)
+	e.GetItem = m(e.GetItem)
+	e.UpdateItem = m(e.UpdateItem)
+	e.DeleteItem = m(e.DeleteItem)
 }
 
 // NewCreateCharacterEndpoint returns an endpoint function that calls the
@@ -110,5 +122,41 @@ func NewRemoveItemFromInventoryEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req any) (any, error) {
 		p := req.(*RemoveItemFromInventoryPayload)
 		return nil, s.RemoveItemFromInventory(ctx, p)
+	}
+}
+
+// NewCreateItemEndpoint returns an endpoint function that calls the method
+// "create_item" of service "externalservice".
+func NewCreateItemEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req any) (any, error) {
+		p := req.(*CreateItemPayload)
+		return s.CreateItem(ctx, p)
+	}
+}
+
+// NewGetItemEndpoint returns an endpoint function that calls the method
+// "get_item" of service "externalservice".
+func NewGetItemEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req any) (any, error) {
+		p := req.(*GetItemPayload)
+		return s.GetItem(ctx, p)
+	}
+}
+
+// NewUpdateItemEndpoint returns an endpoint function that calls the method
+// "update_item" of service "externalservice".
+func NewUpdateItemEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req any) (any, error) {
+		p := req.(*UpdateItemPayload)
+		return nil, s.UpdateItem(ctx, p)
+	}
+}
+
+// NewDeleteItemEndpoint returns an endpoint function that calls the method
+// "delete_item" of service "externalservice".
+func NewDeleteItemEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req any) (any, error) {
+		p := req.(*DeleteItemPayload)
+		return nil, s.DeleteItem(ctx, p)
 	}
 }

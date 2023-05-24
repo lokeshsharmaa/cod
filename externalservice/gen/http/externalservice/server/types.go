@@ -46,6 +46,34 @@ type AddItemToInventoryRequestBody struct {
 	ItemID *int `form:"item_id,omitempty" json:"item_id,omitempty" xml:"item_id,omitempty"`
 }
 
+// CreateItemRequestBody is the type of the "externalservice" service
+// "create_item" endpoint HTTP request body.
+type CreateItemRequestBody struct {
+	// Item name
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// Item description
+	Description *string `form:"description,omitempty" json:"description,omitempty" xml:"description,omitempty"`
+	// Item damage
+	Damage *int `form:"damage,omitempty" json:"damage,omitempty" xml:"damage,omitempty"`
+	// Item healing
+	Healing *int `form:"healing,omitempty" json:"healing,omitempty" xml:"healing,omitempty"`
+	// Item protection
+	Protection *int `form:"protection,omitempty" json:"protection,omitempty" xml:"protection,omitempty"`
+}
+
+// UpdateItemRequestBody is the type of the "externalservice" service
+// "update_item" endpoint HTTP request body.
+type UpdateItemRequestBody struct {
+	// Item name
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// Item description
+	Description *string `form:"description,omitempty" json:"description,omitempty" xml:"description,omitempty"`
+	// Item health
+	Health *int `form:"health,omitempty" json:"health,omitempty" xml:"health,omitempty"`
+	// Item experience
+	Experience *int `form:"experience,omitempty" json:"experience,omitempty" xml:"experience,omitempty"`
+}
+
 // CreateCharacterResponseBody is the type of the "externalservice" service
 // "create_character" endpoint HTTP response body.
 type CreateCharacterResponseBody struct {
@@ -85,6 +113,40 @@ type GetInventoryResponseBody struct {
 	Items []int `form:"items,omitempty" json:"items,omitempty" xml:"items,omitempty"`
 }
 
+// CreateItemResponseBody is the type of the "externalservice" service
+// "create_item" endpoint HTTP response body.
+type CreateItemResponseBody struct {
+	// Item ID
+	ID *int `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Item name
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// Item description
+	Description *string `form:"description,omitempty" json:"description,omitempty" xml:"description,omitempty"`
+	// Item damage
+	Damage *int `form:"damage,omitempty" json:"damage,omitempty" xml:"damage,omitempty"`
+	// Item healing
+	Healing *int `form:"healing,omitempty" json:"healing,omitempty" xml:"healing,omitempty"`
+	// Item protection
+	Protection *int `form:"protection,omitempty" json:"protection,omitempty" xml:"protection,omitempty"`
+}
+
+// GetItemResponseBody is the type of the "externalservice" service "get_item"
+// endpoint HTTP response body.
+type GetItemResponseBody struct {
+	// Item ID
+	ID *int `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Item name
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// Item description
+	Description *string `form:"description,omitempty" json:"description,omitempty" xml:"description,omitempty"`
+	// Item damage
+	Damage *int `form:"damage,omitempty" json:"damage,omitempty" xml:"damage,omitempty"`
+	// Item healing
+	Healing *int `form:"healing,omitempty" json:"healing,omitempty" xml:"healing,omitempty"`
+	// Item protection
+	Protection *int `form:"protection,omitempty" json:"protection,omitempty" xml:"protection,omitempty"`
+}
+
 // NewCreateCharacterResponseBody builds the HTTP response body from the result
 // of the "create_character" endpoint of the "externalservice" service.
 func NewCreateCharacterResponseBody(res *externalservice.Character) *CreateCharacterResponseBody {
@@ -122,6 +184,34 @@ func NewGetInventoryResponseBody(res *externalservice.Inventory) *GetInventoryRe
 		for i, val := range res.Items {
 			body.Items[i] = val
 		}
+	}
+	return body
+}
+
+// NewCreateItemResponseBody builds the HTTP response body from the result of
+// the "create_item" endpoint of the "externalservice" service.
+func NewCreateItemResponseBody(res *externalservice.Item) *CreateItemResponseBody {
+	body := &CreateItemResponseBody{
+		ID:          res.ID,
+		Name:        res.Name,
+		Description: res.Description,
+		Damage:      res.Damage,
+		Healing:     res.Healing,
+		Protection:  res.Protection,
+	}
+	return body
+}
+
+// NewGetItemResponseBody builds the HTTP response body from the result of the
+// "get_item" endpoint of the "externalservice" service.
+func NewGetItemResponseBody(res *externalservice.Item) *GetItemResponseBody {
+	body := &GetItemResponseBody{
+		ID:          res.ID,
+		Name:        res.Name,
+		Description: res.Description,
+		Damage:      res.Damage,
+		Healing:     res.Healing,
+		Protection:  res.Protection,
 	}
 	return body
 }
@@ -201,6 +291,51 @@ func NewRemoveItemFromInventoryPayload(characterID int, itemID int) *externalser
 	return v
 }
 
+// NewCreateItemPayload builds a externalservice service create_item endpoint
+// payload.
+func NewCreateItemPayload(body *CreateItemRequestBody) *externalservice.CreateItemPayload {
+	v := &externalservice.CreateItemPayload{
+		Name:        *body.Name,
+		Description: body.Description,
+		Damage:      *body.Damage,
+		Healing:     body.Healing,
+		Protection:  body.Protection,
+	}
+
+	return v
+}
+
+// NewGetItemPayload builds a externalservice service get_item endpoint payload.
+func NewGetItemPayload(id int) *externalservice.GetItemPayload {
+	v := &externalservice.GetItemPayload{}
+	v.ID = id
+
+	return v
+}
+
+// NewUpdateItemPayload builds a externalservice service update_item endpoint
+// payload.
+func NewUpdateItemPayload(body *UpdateItemRequestBody, id int) *externalservice.UpdateItemPayload {
+	v := &externalservice.UpdateItemPayload{
+		Name:        body.Name,
+		Description: body.Description,
+		Health:      body.Health,
+		Experience:  body.Experience,
+	}
+	v.ID = id
+
+	return v
+}
+
+// NewDeleteItemPayload builds a externalservice service delete_item endpoint
+// payload.
+func NewDeleteItemPayload(id int) *externalservice.DeleteItemPayload {
+	v := &externalservice.DeleteItemPayload{}
+	v.ID = id
+
+	return v
+}
+
 // ValidateCreateCharacterRequestBody runs the validations defined on
 // create_character_request_body
 func ValidateCreateCharacterRequestBody(body *CreateCharacterRequestBody) (err error) {
@@ -221,6 +356,18 @@ func ValidateCreateCharacterRequestBody(body *CreateCharacterRequestBody) (err e
 func ValidateAddItemToInventoryRequestBody(body *AddItemToInventoryRequestBody) (err error) {
 	if body.ItemID == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("item_id", "body"))
+	}
+	return
+}
+
+// ValidateCreateItemRequestBody runs the validations defined on
+// create_item_request_body
+func ValidateCreateItemRequestBody(body *CreateItemRequestBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.Damage == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("damage", "body"))
 	}
 	return
 }

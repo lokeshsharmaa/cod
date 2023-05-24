@@ -20,10 +20,10 @@ paths:
                         schema:
                             $ref: '#/components/schemas/CreateCharacterRequestBody'
                         example:
-                            description: Quia officiis sunt qui quia.
-                            experience: 8516222454781191823
-                            health: 4571870516214136443
-                            name: Vero omnis illum ratione pariatur laboriosam quia.
+                            description: Ut quia accusantium at amet ut.
+                            experience: 3689643759782600333
+                            health: 2497093007532229202
+                            name: Qui aperiam pariatur voluptatem ut mollitia est.
             responses:
                 "201":
                     description: Created response.
@@ -32,11 +32,11 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/Character'
                             example:
-                                description: Non consequatur ut.
-                                experience: 9198454225016935713
-                                health: 598303562754455634
-                                id: 4139230249240955173
-                                name: Sunt omnis facere aliquam.
+                                description: Officiis autem veritatis omnis.
+                                experience: 8375286190170885249
+                                health: 9112857983830879945
+                                id: 6298834335785640940
+                                name: At culpa ipsum ipsam nemo voluptas.
     /characters/{character_id}/inventory:
         get:
             tags:
@@ -52,9 +52,9 @@ paths:
                   schema:
                     type: integer
                     description: Character ID
-                    example: 2506775543531434538
+                    example: 8760241379965209979
                     format: int64
-                  example: 2306927391025578938
+                  example: 5066026253221596997
             responses:
                 "200":
                     description: OK response.
@@ -63,12 +63,12 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/Inventory'
                             example:
-                                character_id: 2497093007532229202
+                                character_id: 1950448096320189662
                                 items:
-                                    - 6298834335785640940
-                                    - 8541812200813330222
-                                    - 7437630563792611987
-                                    - 8020693766630331268
+                                    - 4051215986249105462
+                                    - 7172220335750382023
+                                    - 2367137254133472964
+                                    - 4220163734343528656
     /characters/{character_id}/inventory/items:
         post:
             tags:
@@ -84,9 +84,9 @@ paths:
                   schema:
                     type: integer
                     description: Character ID
-                    example: 6543905432608736991
+                    example: 8917503140654918114
                     format: int64
-                  example: 7448432484047355240
+                  example: 4187482613449125088
             requestBody:
                 required: true
                 content:
@@ -94,7 +94,7 @@ paths:
                         schema:
                             $ref: '#/components/schemas/AddItemToInventoryRequestBody'
                         example:
-                            item_id: 8734216661098503449
+                            item_id: 568441057683699993
             responses:
                 "204":
                     description: No Content response.
@@ -113,9 +113,9 @@ paths:
                   schema:
                     type: integer
                     description: Character ID
-                    example: 321513147352804456
+                    example: 3853221219980524437
                     format: int64
-                  example: 381728469467529204
+                  example: 4238007578045060611
                 - name: item_id
                   in: path
                   description: Item ID
@@ -123,9 +123,9 @@ paths:
                   schema:
                     type: integer
                     description: Item ID
-                    example: 3522135934339545344
+                    example: 7364009414156575503
                     format: int64
-                  example: 2667119234149912196
+                  example: 3914510045272068977
             responses:
                 "204":
                     description: No Content response.
@@ -144,9 +144,9 @@ paths:
                   schema:
                     type: integer
                     description: Character ID
-                    example: 7411150433836695286
+                    example: 9045805271692138069
                     format: int64
-                  example: 1105275477545790124
+                  example: 1150272757424490072
             responses:
                 "200":
                     description: OK response.
@@ -169,9 +169,9 @@ paths:
                   schema:
                     type: integer
                     description: Character ID
-                    example: 4571730275537551117
+                    example: 5114334653321621130
                     format: int64
-                  example: 5260269547118806682
+                  example: 5457777541936968519
             responses:
                 "200":
                     description: OK response.
@@ -180,11 +180,11 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/Character'
                             example:
-                                description: Quia quae distinctio ut.
-                                experience: 8109871214411202544
-                                health: 5826639684918267823
-                                id: 5844935836477069923
-                                name: At molestiae iste qui.
+                                description: Adipisci rerum iste provident accusamus eum blanditiis.
+                                experience: 6382959277217718552
+                                health: 7028230290087813642
+                                id: 7691785422865319516
+                                name: Sit dolore et unde sit deleniti rerum.
         put:
             tags:
                 - externalservice
@@ -199,9 +199,9 @@ paths:
                   schema:
                     type: integer
                     description: Character ID
-                    example: 3266677924080502706
+                    example: 3943484402422389384
                     format: int64
-                  example: 5889723221536471882
+                  example: 8222386122255005091
             requestBody:
                 required: true
                 content:
@@ -209,10 +209,136 @@ paths:
                         schema:
                             $ref: '#/components/schemas/UpdateCharacterRequestBody'
                         example:
-                            description: Ut mollitia est.
-                            experience: 5568484907136742814
-                            health: 2968286776226512618
-                            name: Dolore voluptas distinctio qui aperiam pariatur.
+                            description: Facilis eligendi soluta similique illum reiciendis.
+                            experience: 4429716038026485218
+                            health: 7231771245341319977
+                            name: Eveniet rerum voluptatem.
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
+    /items:
+        post:
+            tags:
+                - externalservice
+            summary: create_item externalservice
+            description: Creating a new Item
+            operationId: externalservice#create_item
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateItemRequestBody'
+                        example:
+                            damage: 8526212768874492114
+                            description: Consequuntur sit.
+                            healing: 8265794075702108861
+                            name: Libero maxime voluptatem aut.
+                            protection: 4780250306447570797
+            responses:
+                "201":
+                    description: Created response.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Item'
+                            example:
+                                damage: 1140742639690035458
+                                description: Aut minima quaerat.
+                                healing: 1144066941420438226
+                                id: 2581507362323480055
+                                name: Atque dicta natus sint doloremque tempore quasi.
+                                protection: 5304415892120189635
+    /items/{id}:
+        delete:
+            tags:
+                - externalservice
+            summary: delete_item externalservice
+            description: Deleting a Item
+            operationId: externalservice#delete_item
+            parameters:
+                - name: id
+                  in: path
+                  description: Item ID
+                  required: true
+                  schema:
+                    type: integer
+                    description: Item ID
+                    example: 45082819325079477
+                    format: int64
+                  example: 1692504791930566027
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                type: string
+                                format: binary
+        get:
+            tags:
+                - externalservice
+            summary: get_item externalservice
+            description: Fetching a Item
+            operationId: externalservice#get_item
+            parameters:
+                - name: id
+                  in: path
+                  description: Item ID
+                  required: true
+                  schema:
+                    type: integer
+                    description: Item ID
+                    example: 8194023616458510959
+                    format: int64
+                  example: 3421329820348194322
+            responses:
+                "200":
+                    description: OK response.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Item'
+                            example:
+                                damage: 6663502197917004876
+                                description: Animi ea.
+                                healing: 3271479134034242427
+                                id: 7261208396582157374
+                                name: Blanditiis quo tenetur placeat.
+                                protection: 4480259166286433031
+        put:
+            tags:
+                - externalservice
+            summary: update_item externalservice
+            description: Updating a Item
+            operationId: externalservice#update_item
+            parameters:
+                - name: id
+                  in: path
+                  description: Item ID
+                  required: true
+                  schema:
+                    type: integer
+                    description: Item ID
+                    example: 2772685577979560822
+                    format: int64
+                  example: 1649056417210594294
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateCharacterRequestBody'
+                        example:
+                            description: In iure magnam.
+                            experience: 3240580154618403769
+                            health: 4215801335920168977
+                            name: Omnis quia consequatur.
             responses:
                 "200":
                     description: OK response.
@@ -229,10 +355,10 @@ components:
                 item_id:
                     type: integer
                     description: Item ID
-                    example: 7957931847754147363
+                    example: 3230026562534203894
                     format: int64
             example:
-                item_id: 5333063356272520859
+                item_id: 175470259420123367
             required:
                 - item_id
         Character:
@@ -241,113 +367,186 @@ components:
                 description:
                     type: string
                     description: Character description
-                    example: Consequatur aliquam ab impedit perferendis.
+                    example: Nihil incidunt.
                 experience:
                     type: integer
                     description: Character experience
-                    example: 8781469473551597709
+                    example: 345740916756654898
                     format: int64
                 health:
                     type: integer
                     description: Character health
-                    example: 8638439644347972807
+                    example: 8093348179790649094
                     format: int64
                 id:
                     type: integer
                     description: Character ID
-                    example: 6581726535697361287
+                    example: 8203751748020364108
                     format: int64
                 name:
                     type: string
                     description: Character name
-                    example: Voluptatum sapiente architecto est dolor amet.
+                    example: Commodi modi et et.
             example:
-                description: Omnis illum aut.
-                experience: 3695807395756318466
-                health: 6570017454609435199
-                id: 1055998478431628667
-                name: Hic quia fugiat atque nesciunt perferendis omnis.
+                description: Quisquam perspiciatis sunt voluptatibus maxime ipsam ipsa.
+                experience: 3265126414976632740
+                health: 7780616661270716251
+                id: 18042578583542857
+                name: Est labore et placeat eum.
         CreateCharacterRequestBody:
             type: object
             properties:
                 description:
                     type: string
                     description: Character description
-                    example: Dicta quia perferendis reprehenderit.
+                    example: Quia reiciendis quaerat neque officiis necessitatibus.
                 experience:
                     type: integer
                     description: Character experience
-                    example: 9042653507876605388
+                    example: 1142406891294321184
                     format: int64
                 health:
                     type: integer
                     description: Character health
-                    example: 7373626352858117030
+                    example: 3511560763190257035
                     format: int64
                 name:
                     type: string
                     description: Character name
-                    example: Deserunt consequatur et officia esse aut.
+                    example: Excepturi quis neque sequi at.
             example:
-                description: Animi officia.
-                experience: 4460934185227264514
-                health: 2479077515049903083
-                name: Porro nostrum quo.
+                description: Dolores qui fugit ut ad itaque.
+                experience: 3929007502480713738
+                health: 8712439490711904272
+                name: Dolorum ipsum.
             required:
                 - name
                 - health
                 - experience
+        CreateItemRequestBody:
+            type: object
+            properties:
+                damage:
+                    type: integer
+                    description: Item damage
+                    example: 3909511169017435163
+                    format: int64
+                description:
+                    type: string
+                    description: Item description
+                    example: Quod doloribus dicta cumque.
+                healing:
+                    type: integer
+                    description: Item healing
+                    example: 6744282855455279607
+                    format: int64
+                name:
+                    type: string
+                    description: Item name
+                    example: Cupiditate eum quia odit similique facere.
+                protection:
+                    type: integer
+                    description: Item protection
+                    example: 4963202030908624397
+                    format: int64
+            example:
+                damage: 6033638700633530896
+                description: Vero modi impedit omnis velit et sed.
+                healing: 53489635576771138
+                name: Esse perferendis consequatur.
+                protection: 8252322241543099004
+            required:
+                - name
+                - damage
         Inventory:
             type: object
             properties:
                 character_id:
                     type: integer
                     description: Character ID
-                    example: 835813309981797132
+                    example: 3663770970077340178
                     format: int64
                 items:
                     type: array
                     items:
                         type: integer
-                        example: 1456303335480671636
+                        example: 5108099851171075758
                         format: int64
                     description: Item IDs
                     example:
-                        - 9202151890835684603
-                        - 5171694523569793010
-                        - 145052725898921399
+                        - 3203268630018737029
+                        - 7760187620840609710
             example:
-                character_id: 4514424488468516822
+                character_id: 8149721819872989702
                 items:
-                    - 5704094389810947266
-                    - 528799681479771418
-                    - 7533102758742478137
+                    - 6468560580184542646
+                    - 3650456837231271386
+                    - 8140383126688711775
+                    - 7497829079714230676
+        Item:
+            type: object
+            properties:
+                damage:
+                    type: integer
+                    description: Item damage
+                    example: 947295761945243316
+                    format: int64
+                description:
+                    type: string
+                    description: Item description
+                    example: Consequatur ut ut asperiores asperiores hic.
+                healing:
+                    type: integer
+                    description: Item healing
+                    example: 63555950925132054
+                    format: int64
+                id:
+                    type: integer
+                    description: Item ID
+                    example: 1590288925399246216
+                    format: int64
+                name:
+                    type: string
+                    description: Item name
+                    example: Minima quo ipsum ad debitis soluta ab.
+                protection:
+                    type: integer
+                    description: Item protection
+                    example: 6056109662278569603
+                    format: int64
+            example:
+                damage: 5081647797459135971
+                description: Modi nihil voluptate animi.
+                healing: 2944779778016040368
+                id: 6567195969498232517
+                name: Ipsum voluptatum est voluptatem iusto reiciendis.
+                protection: 5931435567524637421
         UpdateCharacterRequestBody:
             type: object
             properties:
                 description:
                     type: string
                     description: Character description
-                    example: Omnis provident omnis quod.
+                    example: Enim reprehenderit.
                 experience:
                     type: integer
                     description: Character experience
-                    example: 1296475755254587538
+                    example: 254274771444986220
                     format: int64
                 health:
                     type: integer
                     description: Character health
-                    example: 5001157816933064232
+                    example: 618290626722575961
                     format: int64
                 name:
                     type: string
                     description: Character name
-                    example: Ut eum velit asperiores aut sunt dolor.
+                    example: Quas quaerat sunt.
             example:
-                description: Reprehenderit tempora quibusdam rem rerum voluptatem dolores.
-                experience: 4375767118010631524
-                health: 6728251072541474279
-                name: Recusandae eaque.
+                description: Dolores a eum provident enim.
+                experience: 7448308471596151022
+                health: 2470086566074888672
+                name: Dolor velit quaerat.
 tags:
     - name: externalservice
       description: Contains API CRUD operations on characters, inventories, and items.

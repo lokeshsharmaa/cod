@@ -150,3 +150,29 @@ func (s *externalservicesrvc) RemoveItemFromInventory(ctx context.Context, p *ex
 
 	return nil
 }
+
+// Creating a new Item
+func (s *externalservicesrvc) CreateItem(ctx context.Context, p *externalservice.CreateItemPayload) (res *externalservice.Item, err error) {
+	res = &externalservice.Item{}
+	s.logger.Print("externalservice.create_item")
+	return
+}
+
+// Fetching a Item
+func (s *externalservicesrvc) GetItem(ctx context.Context, p *externalservice.GetItemPayload) (res *externalservice.Item, err error) {
+	res = &externalservice.Item{}
+	s.logger.Print("externalservice.get_item")
+	return
+}
+
+// Updating a Item
+func (s *externalservicesrvc) UpdateItem(ctx context.Context, p *externalservice.UpdateItemPayload) (err error) {
+	s.logger.Print("externalservice.update_item")
+	return
+}
+
+// Deleting a Item
+func (s *externalservicesrvc) DeleteItem(ctx context.Context, p *externalservice.DeleteItemPayload) (err error) {
+	s.logger.Print("externalservice.delete_item")
+	return
+}
