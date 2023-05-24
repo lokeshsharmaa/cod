@@ -5,6 +5,7 @@ import (
 	characterServiceMock "assignment_crossnokaye/cod/externalservice/clients/characterservice/mocks"
 	"assignment_crossnokaye/cod/externalservice/clients/inventoryservice"
 	inventoryServiceMock "assignment_crossnokaye/cod/externalservice/clients/inventoryservice/mocks"
+	itemServiceMock "assignment_crossnokaye/cod/externalservice/clients/itemservice/mocks"
 	"assignment_crossnokaye/cod/externalservice/gen/externalservice"
 	"context"
 	"github.com/golang/mock/gomock"
@@ -20,7 +21,8 @@ func TestCreateCharacter(t *testing.T) {
 
 	mockCharacterServiceClient := characterServiceMock.NewMockClient(ctrl)
 	mockInventoryServiceClient := inventoryServiceMock.NewMockClient(ctrl)
-	service := NewExternalservice(logger, mockCharacterServiceClient, mockInventoryServiceClient, nil)
+	mockItemServiceClient := itemServiceMock.NewMockClient(ctrl)
+	service := NewExternalservice(logger, mockCharacterServiceClient, mockInventoryServiceClient, mockItemServiceClient)
 
 	ctx := context.Background()
 	name := "test"
@@ -62,7 +64,8 @@ func TestGetCharacter(t *testing.T) {
 
 	mockCharacterServiceClient := characterServiceMock.NewMockClient(ctrl)
 	mockInventoryServiceClient := inventoryServiceMock.NewMockClient(ctrl)
-	service := NewExternalservice(logger, mockCharacterServiceClient, mockInventoryServiceClient, nil)
+	mockItemServiceClient := itemServiceMock.NewMockClient(ctrl)
+	service := NewExternalservice(logger, mockCharacterServiceClient, mockInventoryServiceClient, mockItemServiceClient)
 
 	ctx := context.Background()
 
@@ -108,9 +111,10 @@ func TestGetInventory(t *testing.T) {
 
 	mockCharacterServiceClient := characterServiceMock.NewMockClient(ctrl)
 	mockInventoryServiceClient := inventoryServiceMock.NewMockClient(ctrl)
+	mockItemServiceClient := itemServiceMock.NewMockClient(ctrl)
 
 	logger := log.New(nil, "", 0)
-	service := NewExternalservice(logger, mockCharacterServiceClient, mockInventoryServiceClient, nil)
+	service := NewExternalservice(logger, mockCharacterServiceClient, mockInventoryServiceClient, mockItemServiceClient)
 
 	ctx := context.Background()
 	characterID := 1
@@ -143,9 +147,10 @@ func TestAddItemToInventory(t *testing.T) {
 
 	mockCharacterServiceClient := characterServiceMock.NewMockClient(ctrl)
 	mockInventoryServiceClient := inventoryServiceMock.NewMockClient(ctrl)
+	mockItemServiceClient := itemServiceMock.NewMockClient(ctrl)
 
 	logger := log.New(nil, "", 0)
-	service := NewExternalservice(logger, mockCharacterServiceClient, mockInventoryServiceClient, nil)
+	service := NewExternalservice(logger, mockCharacterServiceClient, mockInventoryServiceClient, mockItemServiceClient)
 
 	ctx := context.Background()
 	id := 1
@@ -172,9 +177,10 @@ func TestRemoveItemFromInventory(t *testing.T) {
 
 	mockCharacterServiceClient := characterServiceMock.NewMockClient(ctrl)
 	mockInventoryServiceClient := inventoryServiceMock.NewMockClient(ctrl)
+	mockItemServiceClient := itemServiceMock.NewMockClient(ctrl)
 
 	logger := log.New(nil, "", 0)
-	service := NewExternalservice(logger, mockCharacterServiceClient, mockInventoryServiceClient, nil)
+	service := NewExternalservice(logger, mockCharacterServiceClient, mockInventoryServiceClient, mockItemServiceClient)
 
 	ctx := context.Background()
 	payload := &externalservice.RemoveItemFromInventoryPayload{
