@@ -2,6 +2,7 @@ package externalserviceapi
 
 import (
 	"assignment_crossnokaye/cod/externalservice/clients/characterservice"
+	"assignment_crossnokaye/cod/externalservice/clients/inventoryservice"
 	externalservice "assignment_crossnokaye/cod/externalservice/gen/externalservice"
 	"context"
 	"log"
@@ -12,10 +13,11 @@ import (
 type externalservicesrvc struct {
 	logger                 *log.Logger
 	characterServiceClient characterservice.Client
+	inventoryServiceClient inventoryservice.Client
 }
 
-func NewExternalservice(logger *log.Logger, client characterservice.Client) externalservice.Service {
-	return &externalservicesrvc{logger: logger, characterServiceClient: client}
+func NewExternalservice(logger *log.Logger, characterServiceClient characterservice.Client, inventoryServiceClient inventoryservice.Client) externalservice.Service {
+	return &externalservicesrvc{logger: logger, characterServiceClient: characterServiceClient, inventoryServiceClient: inventoryServiceClient}
 }
 
 func (s *externalservicesrvc) CreateCharacter(ctx context.Context, p *externalservice.CreateCharacterPayload) (res *externalservice.Character, err error) {
@@ -87,6 +89,58 @@ func (s *externalservicesrvc) DeleteCharacter(ctx context.Context, p *externalse
 	}
 
 	err = s.characterServiceClient.DeleteCharacter(ctx, payload)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *externalservicesrvc) GetInventory(ctx context.Context, p *externalservice.GetInventoryPayload) (res *externalservice.Inventory, err error) {
+	payload := &inventoryservice.GetPayload{
+		ID: p.CharacterID,
+	}
+
+	response, err := s.inventoryServiceClient.GetInventory(ctx, payload)
+
+	if err != nil {
+		return nil, err
+	}
+
+	res = &externalservice.Inventory{
+		CharacterID: response.CharacterID,
+		Items:       response.Items,
+	}
+
+	return res, nil
+}
+
+func (s *externalservicesrvc) AddItemToInventory(ctx context.Context, p *externalservice.AddItemToInventoryPayload) (err error) {
+	// TODO: Check if item id is valid
+	payload := &inventoryservice.AddPayload{
+		CharacterID: p.CharacterID,
+		ItemID:      &p.ItemID,
+	}
+
+	err = s.inventoryServiceClient.AddInventory(ctx, payload)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *externalservicesrvc) RemoveItemFromInventory(ctx context.Context, p *externalservice.RemoveItemFromInventoryPayload) (err error) {
+	// TODO: Check if item id is valid
+
+	payload := &inventoryservice.DeletePayload{
+		CharacterID: p.CharacterID,
+		ItemID:      p.ItemID,
+	}
+
+	err = s.inventoryServiceClient.DeleteInventory(ctx, payload)
 
 	if err != nil {
 		return err

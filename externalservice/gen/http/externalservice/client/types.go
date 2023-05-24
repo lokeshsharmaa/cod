@@ -37,6 +37,13 @@ type UpdateCharacterRequestBody struct {
 	Experience *int `form:"experience,omitempty" json:"experience,omitempty" xml:"experience,omitempty"`
 }
 
+// AddItemToInventoryRequestBody is the type of the "externalservice" service
+// "add_item_to_inventory" endpoint HTTP request body.
+type AddItemToInventoryRequestBody struct {
+	// Item ID
+	ItemID int `form:"item_id" json:"item_id" xml:"item_id"`
+}
+
 // CreateCharacterResponseBody is the type of the "externalservice" service
 // "create_character" endpoint HTTP response body.
 type CreateCharacterResponseBody struct {
@@ -67,6 +74,15 @@ type GetCharacterResponseBody struct {
 	Experience *int `form:"experience,omitempty" json:"experience,omitempty" xml:"experience,omitempty"`
 }
 
+// GetInventoryResponseBody is the type of the "externalservice" service
+// "get_inventory" endpoint HTTP response body.
+type GetInventoryResponseBody struct {
+	// Character ID
+	CharacterID *int `form:"character_id,omitempty" json:"character_id,omitempty" xml:"character_id,omitempty"`
+	// Item IDs
+	Items []int `form:"items,omitempty" json:"items,omitempty" xml:"items,omitempty"`
+}
+
 // NewCreateCharacterRequestBody builds the HTTP request body from the payload
 // of the "create_character" endpoint of the "externalservice" service.
 func NewCreateCharacterRequestBody(p *externalservice.CreateCharacterPayload) *CreateCharacterRequestBody {
@@ -87,6 +103,16 @@ func NewUpdateCharacterRequestBody(p *externalservice.UpdateCharacterPayload) *U
 		Description: p.Description,
 		Health:      p.Health,
 		Experience:  p.Experience,
+	}
+	return body
+}
+
+// NewAddItemToInventoryRequestBody builds the HTTP request body from the
+// payload of the "add_item_to_inventory" endpoint of the "externalservice"
+// service.
+func NewAddItemToInventoryRequestBody(p *externalservice.AddItemToInventoryPayload) *AddItemToInventoryRequestBody {
+	body := &AddItemToInventoryRequestBody{
+		ItemID: p.ItemID,
 	}
 	return body
 }
@@ -114,6 +140,22 @@ func NewGetCharacterCharacterOK(body *GetCharacterResponseBody) *externalservice
 		Description: body.Description,
 		Health:      body.Health,
 		Experience:  body.Experience,
+	}
+
+	return v
+}
+
+// NewGetInventoryInventoryOK builds a "externalservice" service
+// "get_inventory" endpoint result from a HTTP "OK" response.
+func NewGetInventoryInventoryOK(body *GetInventoryResponseBody) *externalservice.Inventory {
+	v := &externalservice.Inventory{
+		CharacterID: body.CharacterID,
+	}
+	if body.Items != nil {
+		v.Items = make([]int, len(body.Items))
+		for i, val := range body.Items {
+			v.Items[i] = val
+		}
 	}
 
 	return v

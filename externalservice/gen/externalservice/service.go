@@ -21,6 +21,12 @@ type Service interface {
 	UpdateCharacter(context.Context, *UpdateCharacterPayload) (err error)
 	// Deleting a Character
 	DeleteCharacter(context.Context, *DeleteCharacterPayload) (err error)
+	// Fetching a Character's Inventory
+	GetInventory(context.Context, *GetInventoryPayload) (res *Inventory, err error)
+	// Adding an Item to Character's Inventory
+	AddItemToInventory(context.Context, *AddItemToInventoryPayload) (err error)
+	// Removing an Item from Character's Inventory
+	RemoveItemFromInventory(context.Context, *RemoveItemFromInventoryPayload) (err error)
 }
 
 // ServiceName is the name of the service as defined in the design. This is the
@@ -31,7 +37,16 @@ const ServiceName = "externalservice"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [4]string{"create_character", "get_character", "update_character", "delete_character"}
+var MethodNames = [7]string{"create_character", "get_character", "update_character", "delete_character", "get_inventory", "add_item_to_inventory", "remove_item_from_inventory"}
+
+// AddItemToInventoryPayload is the payload type of the externalservice service
+// add_item_to_inventory method.
+type AddItemToInventoryPayload struct {
+	// Character ID
+	CharacterID int
+	// Item ID
+	ItemID int
+}
 
 // Character is the result type of the externalservice service create_character
 // method.
@@ -75,6 +90,31 @@ type GetCharacterPayload struct {
 	ID int
 }
 
+// GetInventoryPayload is the payload type of the externalservice service
+// get_inventory method.
+type GetInventoryPayload struct {
+	// Character ID
+	CharacterID int
+}
+
+// Inventory is the result type of the externalservice service get_inventory
+// method.
+type Inventory struct {
+	// Character ID
+	CharacterID *int
+	// Item IDs
+	Items []int
+}
+
+// RemoveItemFromInventoryPayload is the payload type of the externalservice
+// service remove_item_from_inventory method.
+type RemoveItemFromInventoryPayload struct {
+	// Character ID
+	CharacterID int
+	// Item ID
+	ItemID int
+}
+
 // UpdateCharacterPayload is the payload type of the externalservice service
 // update_character method.
 type UpdateCharacterPayload struct {
@@ -95,6 +135,9 @@ type BadRequest string
 
 // Character not found
 type NotFound string
+
+// Item not valid
+type NotValidTime string
 
 // Name not unique
 type UniqueConstraint string
@@ -131,6 +174,23 @@ func (e NotFound) ErrorName() string {
 // GoaErrorName returns "not_found".
 func (e NotFound) GoaErrorName() string {
 	return "not_found"
+}
+
+// Error returns an error description.
+func (e NotValidTime) Error() string {
+	return "Item not valid"
+}
+
+// ErrorName returns "not_valid_time".
+//
+// Deprecated: Use GoaErrorName - https://github.com/goadesign/goa/issues/3105
+func (e NotValidTime) ErrorName() string {
+	return e.GoaErrorName()
+}
+
+// GoaErrorName returns "not_valid_time".
+func (e NotValidTime) GoaErrorName() string {
+	return "not_valid_time"
 }
 
 // Error returns an error description.

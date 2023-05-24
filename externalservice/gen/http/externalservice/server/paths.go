@@ -30,3 +30,18 @@ func UpdateCharacterExternalservicePath(id int) string {
 func DeleteCharacterExternalservicePath(id int) string {
 	return fmt.Sprintf("/characters/%v", id)
 }
+
+// GetInventoryExternalservicePath returns the URL path to the externalservice service get_inventory HTTP endpoint.
+func GetInventoryExternalservicePath(characterID int) string {
+	return fmt.Sprintf("/characters/%v/inventory", characterID)
+}
+
+// AddItemToInventoryExternalservicePath returns the URL path to the externalservice service add_item_to_inventory HTTP endpoint.
+func AddItemToInventoryExternalservicePath(characterID int) string {
+	return fmt.Sprintf("/characters/%v/inventory/items", characterID)
+}
+
+// RemoveItemFromInventoryExternalservicePath returns the URL path to the externalservice service remove_item_from_inventory HTTP endpoint.
+func RemoveItemFromInventoryExternalservicePath(characterID int, itemID int) string {
+	return fmt.Sprintf("/characters/%v/inventory/items/%v", characterID, itemID)
+}

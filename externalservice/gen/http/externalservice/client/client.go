@@ -33,6 +33,18 @@ type Client struct {
 	// delete_character endpoint.
 	DeleteCharacterDoer goahttp.Doer
 
+	// GetInventory Doer is the HTTP client used to make requests to the
+	// get_inventory endpoint.
+	GetInventoryDoer goahttp.Doer
+
+	// AddItemToInventory Doer is the HTTP client used to make requests to the
+	// add_item_to_inventory endpoint.
+	AddItemToInventoryDoer goahttp.Doer
+
+	// RemoveItemFromInventory Doer is the HTTP client used to make requests to the
+	// remove_item_from_inventory endpoint.
+	RemoveItemFromInventoryDoer goahttp.Doer
+
 	// RestoreResponseBody controls whether the response bodies are reset after
 	// decoding so they can be read again.
 	RestoreResponseBody bool
@@ -54,15 +66,18 @@ func NewClient(
 	restoreBody bool,
 ) *Client {
 	return &Client{
-		CreateCharacterDoer: doer,
-		GetCharacterDoer:    doer,
-		UpdateCharacterDoer: doer,
-		DeleteCharacterDoer: doer,
-		RestoreResponseBody: restoreBody,
-		scheme:              scheme,
-		host:                host,
-		decoder:             dec,
-		encoder:             enc,
+		CreateCharacterDoer:         doer,
+		GetCharacterDoer:            doer,
+		UpdateCharacterDoer:         doer,
+		DeleteCharacterDoer:         doer,
+		GetInventoryDoer:            doer,
+		AddItemToInventoryDoer:      doer,
+		RemoveItemFromInventoryDoer: doer,
+		RestoreResponseBody:         restoreBody,
+		scheme:                      scheme,
+		host:                        host,
+		decoder:                     dec,
+		encoder:                     enc,
 	}
 }
 
@@ -147,6 +162,68 @@ func (c *Client) DeleteCharacter() goa.Endpoint {
 		resp, err := c.DeleteCharacterDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("externalservice", "delete_character", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// GetInventory returns an endpoint that makes HTTP requests to the
+// externalservice service get_inventory server.
+func (c *Client) GetInventory() goa.Endpoint {
+	var (
+		decodeResponse = DecodeGetInventoryResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v any) (any, error) {
+		req, err := c.BuildGetInventoryRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.GetInventoryDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("externalservice", "get_inventory", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// AddItemToInventory returns an endpoint that makes HTTP requests to the
+// externalservice service add_item_to_inventory server.
+func (c *Client) AddItemToInventory() goa.Endpoint {
+	var (
+		encodeRequest  = EncodeAddItemToInventoryRequest(c.encoder)
+		decodeResponse = DecodeAddItemToInventoryResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v any) (any, error) {
+		req, err := c.BuildAddItemToInventoryRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.AddItemToInventoryDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("externalservice", "add_item_to_inventory", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// RemoveItemFromInventory returns an endpoint that makes HTTP requests to the
+// externalservice service remove_item_from_inventory server.
+func (c *Client) RemoveItemFromInventory() goa.Endpoint {
+	var (
+		decodeResponse = DecodeRemoveItemFromInventoryResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v any) (any, error) {
+		req, err := c.BuildRemoveItemFromInventoryRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.RemoveItemFromInventoryDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("externalservice", "remove_item_from_inventory", err)
 		}
 		return decodeResponse(resp)
 	}

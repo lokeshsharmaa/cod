@@ -15,19 +15,25 @@ import (
 
 // Client is the "externalservice" service client.
 type Client struct {
-	CreateCharacterEndpoint goa.Endpoint
-	GetCharacterEndpoint    goa.Endpoint
-	UpdateCharacterEndpoint goa.Endpoint
-	DeleteCharacterEndpoint goa.Endpoint
+	CreateCharacterEndpoint         goa.Endpoint
+	GetCharacterEndpoint            goa.Endpoint
+	UpdateCharacterEndpoint         goa.Endpoint
+	DeleteCharacterEndpoint         goa.Endpoint
+	GetInventoryEndpoint            goa.Endpoint
+	AddItemToInventoryEndpoint      goa.Endpoint
+	RemoveItemFromInventoryEndpoint goa.Endpoint
 }
 
 // NewClient initializes a "externalservice" service client given the endpoints.
-func NewClient(createCharacter, getCharacter, updateCharacter, deleteCharacter goa.Endpoint) *Client {
+func NewClient(createCharacter, getCharacter, updateCharacter, deleteCharacter, getInventory, addItemToInventory, removeItemFromInventory goa.Endpoint) *Client {
 	return &Client{
-		CreateCharacterEndpoint: createCharacter,
-		GetCharacterEndpoint:    getCharacter,
-		UpdateCharacterEndpoint: updateCharacter,
-		DeleteCharacterEndpoint: deleteCharacter,
+		CreateCharacterEndpoint:         createCharacter,
+		GetCharacterEndpoint:            getCharacter,
+		UpdateCharacterEndpoint:         updateCharacter,
+		DeleteCharacterEndpoint:         deleteCharacter,
+		GetInventoryEndpoint:            getInventory,
+		AddItemToInventoryEndpoint:      addItemToInventory,
+		RemoveItemFromInventoryEndpoint: removeItemFromInventory,
 	}
 }
 
@@ -77,5 +83,41 @@ func (c *Client) UpdateCharacter(ctx context.Context, p *UpdateCharacterPayload)
 //   - error: internal error
 func (c *Client) DeleteCharacter(ctx context.Context, p *DeleteCharacterPayload) (err error) {
 	_, err = c.DeleteCharacterEndpoint(ctx, p)
+	return
+}
+
+// GetInventory calls the "get_inventory" endpoint of the "externalservice"
+// service.
+// GetInventory may return the following errors:
+//   - "not_found" (type NotFound)
+//   - error: internal error
+func (c *Client) GetInventory(ctx context.Context, p *GetInventoryPayload) (res *Inventory, err error) {
+	var ires any
+	ires, err = c.GetInventoryEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*Inventory), nil
+}
+
+// AddItemToInventory calls the "add_item_to_inventory" endpoint of the
+// "externalservice" service.
+// AddItemToInventory may return the following errors:
+//   - "not_found" (type NotFound)
+//   - "not_valid_time" (type NotValidTime)
+//   - error: internal error
+func (c *Client) AddItemToInventory(ctx context.Context, p *AddItemToInventoryPayload) (err error) {
+	_, err = c.AddItemToInventoryEndpoint(ctx, p)
+	return
+}
+
+// RemoveItemFromInventory calls the "remove_item_from_inventory" endpoint of
+// the "externalservice" service.
+// RemoveItemFromInventory may return the following errors:
+//   - "not_found" (type NotFound)
+//   - "not_valid_time" (type NotValidTime)
+//   - error: internal error
+func (c *Client) RemoveItemFromInventory(ctx context.Context, p *RemoveItemFromInventoryPayload) (err error) {
+	_, err = c.RemoveItemFromInventoryEndpoint(ctx, p)
 	return
 }

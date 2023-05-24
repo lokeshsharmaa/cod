@@ -176,3 +176,138 @@ func DecodeDeleteCharacterRequest(mux goahttp.Muxer, decoder func(*http.Request)
 		return payload, nil
 	}
 }
+
+// EncodeGetInventoryResponse returns an encoder for responses returned by the
+// externalservice get_inventory endpoint.
+func EncodeGetInventoryResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {
+	return func(ctx context.Context, w http.ResponseWriter, v any) error {
+		res, _ := v.(*externalservice.Inventory)
+		enc := encoder(ctx, w)
+		body := NewGetInventoryResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// DecodeGetInventoryRequest returns a decoder for requests sent to the
+// externalservice get_inventory endpoint.
+func DecodeGetInventoryRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (any, error) {
+	return func(r *http.Request) (any, error) {
+		var (
+			characterID int
+			err         error
+
+			params = mux.Vars(r)
+		)
+		{
+			characterIDRaw := params["character_id"]
+			v, err2 := strconv.ParseInt(characterIDRaw, 10, strconv.IntSize)
+			if err2 != nil {
+				err = goa.MergeErrors(err, goa.InvalidFieldTypeError("characterID", characterIDRaw, "integer"))
+			}
+			characterID = int(v)
+		}
+		if err != nil {
+			return nil, err
+		}
+		payload := NewGetInventoryPayload(characterID)
+
+		return payload, nil
+	}
+}
+
+// EncodeAddItemToInventoryResponse returns an encoder for responses returned
+// by the externalservice add_item_to_inventory endpoint.
+func EncodeAddItemToInventoryResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {
+	return func(ctx context.Context, w http.ResponseWriter, v any) error {
+		w.WriteHeader(http.StatusNoContent)
+		return nil
+	}
+}
+
+// DecodeAddItemToInventoryRequest returns a decoder for requests sent to the
+// externalservice add_item_to_inventory endpoint.
+func DecodeAddItemToInventoryRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (any, error) {
+	return func(r *http.Request) (any, error) {
+		var (
+			body AddItemToInventoryRequestBody
+			err  error
+		)
+		err = decoder(r).Decode(&body)
+		if err != nil {
+			if err == io.EOF {
+				return nil, goa.MissingPayloadError()
+			}
+			return nil, goa.DecodePayloadError(err.Error())
+		}
+		err = ValidateAddItemToInventoryRequestBody(&body)
+		if err != nil {
+			return nil, err
+		}
+
+		var (
+			characterID int
+
+			params = mux.Vars(r)
+		)
+		{
+			characterIDRaw := params["character_id"]
+			v, err2 := strconv.ParseInt(characterIDRaw, 10, strconv.IntSize)
+			if err2 != nil {
+				err = goa.MergeErrors(err, goa.InvalidFieldTypeError("characterID", characterIDRaw, "integer"))
+			}
+			characterID = int(v)
+		}
+		if err != nil {
+			return nil, err
+		}
+		payload := NewAddItemToInventoryPayload(&body, characterID)
+
+		return payload, nil
+	}
+}
+
+// EncodeRemoveItemFromInventoryResponse returns an encoder for responses
+// returned by the externalservice remove_item_from_inventory endpoint.
+func EncodeRemoveItemFromInventoryResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, any) error {
+	return func(ctx context.Context, w http.ResponseWriter, v any) error {
+		w.WriteHeader(http.StatusNoContent)
+		return nil
+	}
+}
+
+// DecodeRemoveItemFromInventoryRequest returns a decoder for requests sent to
+// the externalservice remove_item_from_inventory endpoint.
+func DecodeRemoveItemFromInventoryRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (any, error) {
+	return func(r *http.Request) (any, error) {
+		var (
+			characterID int
+			itemID      int
+			err         error
+
+			params = mux.Vars(r)
+		)
+		{
+			characterIDRaw := params["character_id"]
+			v, err2 := strconv.ParseInt(characterIDRaw, 10, strconv.IntSize)
+			if err2 != nil {
+				err = goa.MergeErrors(err, goa.InvalidFieldTypeError("characterID", characterIDRaw, "integer"))
+			}
+			characterID = int(v)
+		}
+		{
+			itemIDRaw := params["item_id"]
+			v, err2 := strconv.ParseInt(itemIDRaw, 10, strconv.IntSize)
+			if err2 != nil {
+				err = goa.MergeErrors(err, goa.InvalidFieldTypeError("itemID", itemIDRaw, "integer"))
+			}
+			itemID = int(v)
+		}
+		if err != nil {
+			return nil, err
+		}
+		payload := NewRemoveItemFromInventoryPayload(characterID, itemID)
+
+		return payload, nil
+	}
+}

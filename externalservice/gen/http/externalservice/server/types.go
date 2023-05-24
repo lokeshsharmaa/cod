@@ -39,6 +39,13 @@ type UpdateCharacterRequestBody struct {
 	Experience *int `form:"experience,omitempty" json:"experience,omitempty" xml:"experience,omitempty"`
 }
 
+// AddItemToInventoryRequestBody is the type of the "externalservice" service
+// "add_item_to_inventory" endpoint HTTP request body.
+type AddItemToInventoryRequestBody struct {
+	// Item ID
+	ItemID *int `form:"item_id,omitempty" json:"item_id,omitempty" xml:"item_id,omitempty"`
+}
+
 // CreateCharacterResponseBody is the type of the "externalservice" service
 // "create_character" endpoint HTTP response body.
 type CreateCharacterResponseBody struct {
@@ -69,6 +76,15 @@ type GetCharacterResponseBody struct {
 	Experience *int `form:"experience,omitempty" json:"experience,omitempty" xml:"experience,omitempty"`
 }
 
+// GetInventoryResponseBody is the type of the "externalservice" service
+// "get_inventory" endpoint HTTP response body.
+type GetInventoryResponseBody struct {
+	// Character ID
+	CharacterID *int `form:"character_id,omitempty" json:"character_id,omitempty" xml:"character_id,omitempty"`
+	// Item IDs
+	Items []int `form:"items,omitempty" json:"items,omitempty" xml:"items,omitempty"`
+}
+
 // NewCreateCharacterResponseBody builds the HTTP response body from the result
 // of the "create_character" endpoint of the "externalservice" service.
 func NewCreateCharacterResponseBody(res *externalservice.Character) *CreateCharacterResponseBody {
@@ -91,6 +107,21 @@ func NewGetCharacterResponseBody(res *externalservice.Character) *GetCharacterRe
 		Description: res.Description,
 		Health:      res.Health,
 		Experience:  res.Experience,
+	}
+	return body
+}
+
+// NewGetInventoryResponseBody builds the HTTP response body from the result of
+// the "get_inventory" endpoint of the "externalservice" service.
+func NewGetInventoryResponseBody(res *externalservice.Inventory) *GetInventoryResponseBody {
+	body := &GetInventoryResponseBody{
+		CharacterID: res.CharacterID,
+	}
+	if res.Items != nil {
+		body.Items = make([]int, len(res.Items))
+		for i, val := range res.Items {
+			body.Items[i] = val
+		}
 	}
 	return body
 }
@@ -140,6 +171,36 @@ func NewDeleteCharacterPayload(id int) *externalservice.DeleteCharacterPayload {
 	return v
 }
 
+// NewGetInventoryPayload builds a externalservice service get_inventory
+// endpoint payload.
+func NewGetInventoryPayload(characterID int) *externalservice.GetInventoryPayload {
+	v := &externalservice.GetInventoryPayload{}
+	v.CharacterID = characterID
+
+	return v
+}
+
+// NewAddItemToInventoryPayload builds a externalservice service
+// add_item_to_inventory endpoint payload.
+func NewAddItemToInventoryPayload(body *AddItemToInventoryRequestBody, characterID int) *externalservice.AddItemToInventoryPayload {
+	v := &externalservice.AddItemToInventoryPayload{
+		ItemID: *body.ItemID,
+	}
+	v.CharacterID = characterID
+
+	return v
+}
+
+// NewRemoveItemFromInventoryPayload builds a externalservice service
+// remove_item_from_inventory endpoint payload.
+func NewRemoveItemFromInventoryPayload(characterID int, itemID int) *externalservice.RemoveItemFromInventoryPayload {
+	v := &externalservice.RemoveItemFromInventoryPayload{}
+	v.CharacterID = characterID
+	v.ItemID = itemID
+
+	return v
+}
+
 // ValidateCreateCharacterRequestBody runs the validations defined on
 // create_character_request_body
 func ValidateCreateCharacterRequestBody(body *CreateCharacterRequestBody) (err error) {
@@ -151,6 +212,15 @@ func ValidateCreateCharacterRequestBody(body *CreateCharacterRequestBody) (err e
 	}
 	if body.Experience == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("experience", "body"))
+	}
+	return
+}
+
+// ValidateAddItemToInventoryRequestBody runs the validations defined on
+// add_item_to_inventory_request_body
+func ValidateAddItemToInventoryRequestBody(body *AddItemToInventoryRequestBody) (err error) {
+	if body.ItemID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("item_id", "body"))
 	}
 	return
 }

@@ -268,3 +268,189 @@ func DecodeDeleteCharacterResponse(decoder func(*http.Response) goahttp.Decoder,
 		}
 	}
 }
+
+// BuildGetInventoryRequest instantiates a HTTP request object with method and
+// path set to call the "externalservice" service "get_inventory" endpoint
+func (c *Client) BuildGetInventoryRequest(ctx context.Context, v any) (*http.Request, error) {
+	var (
+		characterID int
+	)
+	{
+		p, ok := v.(*externalservice.GetInventoryPayload)
+		if !ok {
+			return nil, goahttp.ErrInvalidType("externalservice", "get_inventory", "*externalservice.GetInventoryPayload", v)
+		}
+		characterID = p.CharacterID
+	}
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: GetInventoryExternalservicePath(characterID)}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("externalservice", "get_inventory", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// DecodeGetInventoryResponse returns a decoder for responses returned by the
+// externalservice get_inventory endpoint. restoreBody controls whether the
+// response body should be restored after having been read.
+func DecodeGetInventoryResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
+	return func(resp *http.Response) (any, error) {
+		if restoreBody {
+			b, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body GetInventoryResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("externalservice", "get_inventory", err)
+			}
+			res := NewGetInventoryInventoryOK(&body)
+			return res, nil
+		default:
+			body, _ := io.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("externalservice", "get_inventory", resp.StatusCode, string(body))
+		}
+	}
+}
+
+// BuildAddItemToInventoryRequest instantiates a HTTP request object with
+// method and path set to call the "externalservice" service
+// "add_item_to_inventory" endpoint
+func (c *Client) BuildAddItemToInventoryRequest(ctx context.Context, v any) (*http.Request, error) {
+	var (
+		characterID int
+	)
+	{
+		p, ok := v.(*externalservice.AddItemToInventoryPayload)
+		if !ok {
+			return nil, goahttp.ErrInvalidType("externalservice", "add_item_to_inventory", "*externalservice.AddItemToInventoryPayload", v)
+		}
+		characterID = p.CharacterID
+	}
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: AddItemToInventoryExternalservicePath(characterID)}
+	req, err := http.NewRequest("POST", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("externalservice", "add_item_to_inventory", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// EncodeAddItemToInventoryRequest returns an encoder for requests sent to the
+// externalservice add_item_to_inventory server.
+func EncodeAddItemToInventoryRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, any) error {
+	return func(req *http.Request, v any) error {
+		p, ok := v.(*externalservice.AddItemToInventoryPayload)
+		if !ok {
+			return goahttp.ErrInvalidType("externalservice", "add_item_to_inventory", "*externalservice.AddItemToInventoryPayload", v)
+		}
+		body := NewAddItemToInventoryRequestBody(p)
+		if err := encoder(req).Encode(&body); err != nil {
+			return goahttp.ErrEncodingError("externalservice", "add_item_to_inventory", err)
+		}
+		return nil
+	}
+}
+
+// DecodeAddItemToInventoryResponse returns a decoder for responses returned by
+// the externalservice add_item_to_inventory endpoint. restoreBody controls
+// whether the response body should be restored after having been read.
+func DecodeAddItemToInventoryResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
+	return func(resp *http.Response) (any, error) {
+		if restoreBody {
+			b, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusNoContent:
+			return nil, nil
+		default:
+			body, _ := io.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("externalservice", "add_item_to_inventory", resp.StatusCode, string(body))
+		}
+	}
+}
+
+// BuildRemoveItemFromInventoryRequest instantiates a HTTP request object with
+// method and path set to call the "externalservice" service
+// "remove_item_from_inventory" endpoint
+func (c *Client) BuildRemoveItemFromInventoryRequest(ctx context.Context, v any) (*http.Request, error) {
+	var (
+		characterID int
+		itemID      int
+	)
+	{
+		p, ok := v.(*externalservice.RemoveItemFromInventoryPayload)
+		if !ok {
+			return nil, goahttp.ErrInvalidType("externalservice", "remove_item_from_inventory", "*externalservice.RemoveItemFromInventoryPayload", v)
+		}
+		characterID = p.CharacterID
+		itemID = p.ItemID
+	}
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: RemoveItemFromInventoryExternalservicePath(characterID, itemID)}
+	req, err := http.NewRequest("DELETE", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("externalservice", "remove_item_from_inventory", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// DecodeRemoveItemFromInventoryResponse returns a decoder for responses
+// returned by the externalservice remove_item_from_inventory endpoint.
+// restoreBody controls whether the response body should be restored after
+// having been read.
+func DecodeRemoveItemFromInventoryResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (any, error) {
+	return func(resp *http.Response) (any, error) {
+		if restoreBody {
+			b, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusNoContent:
+			return nil, nil
+		default:
+			body, _ := io.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("externalservice", "remove_item_from_inventory", resp.StatusCode, string(body))
+		}
+	}
+}

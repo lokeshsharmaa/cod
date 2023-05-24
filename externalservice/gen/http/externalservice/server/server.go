@@ -18,11 +18,14 @@ import (
 
 // Server lists the externalservice service endpoint HTTP handlers.
 type Server struct {
-	Mounts          []*MountPoint
-	CreateCharacter http.Handler
-	GetCharacter    http.Handler
-	UpdateCharacter http.Handler
-	DeleteCharacter http.Handler
+	Mounts                  []*MountPoint
+	CreateCharacter         http.Handler
+	GetCharacter            http.Handler
+	UpdateCharacter         http.Handler
+	DeleteCharacter         http.Handler
+	GetInventory            http.Handler
+	AddItemToInventory      http.Handler
+	RemoveItemFromInventory http.Handler
 }
 
 // MountPoint holds information about the mounted endpoints.
@@ -56,11 +59,17 @@ func New(
 			{"GetCharacter", "GET", "/characters/{id}"},
 			{"UpdateCharacter", "PUT", "/characters/{id}"},
 			{"DeleteCharacter", "DELETE", "/characters/{id}"},
+			{"GetInventory", "GET", "/characters/{character_id}/inventory"},
+			{"AddItemToInventory", "POST", "/characters/{character_id}/inventory/items"},
+			{"RemoveItemFromInventory", "DELETE", "/characters/{character_id}/inventory/items/{item_id}"},
 		},
-		CreateCharacter: NewCreateCharacterHandler(e.CreateCharacter, mux, decoder, encoder, errhandler, formatter),
-		GetCharacter:    NewGetCharacterHandler(e.GetCharacter, mux, decoder, encoder, errhandler, formatter),
-		UpdateCharacter: NewUpdateCharacterHandler(e.UpdateCharacter, mux, decoder, encoder, errhandler, formatter),
-		DeleteCharacter: NewDeleteCharacterHandler(e.DeleteCharacter, mux, decoder, encoder, errhandler, formatter),
+		CreateCharacter:         NewCreateCharacterHandler(e.CreateCharacter, mux, decoder, encoder, errhandler, formatter),
+		GetCharacter:            NewGetCharacterHandler(e.GetCharacter, mux, decoder, encoder, errhandler, formatter),
+		UpdateCharacter:         NewUpdateCharacterHandler(e.UpdateCharacter, mux, decoder, encoder, errhandler, formatter),
+		DeleteCharacter:         NewDeleteCharacterHandler(e.DeleteCharacter, mux, decoder, encoder, errhandler, formatter),
+		GetInventory:            NewGetInventoryHandler(e.GetInventory, mux, decoder, encoder, errhandler, formatter),
+		AddItemToInventory:      NewAddItemToInventoryHandler(e.AddItemToInventory, mux, decoder, encoder, errhandler, formatter),
+		RemoveItemFromInventory: NewRemoveItemFromInventoryHandler(e.RemoveItemFromInventory, mux, decoder, encoder, errhandler, formatter),
 	}
 }
 
@@ -73,6 +82,9 @@ func (s *Server) Use(m func(http.Handler) http.Handler) {
 	s.GetCharacter = m(s.GetCharacter)
 	s.UpdateCharacter = m(s.UpdateCharacter)
 	s.DeleteCharacter = m(s.DeleteCharacter)
+	s.GetInventory = m(s.GetInventory)
+	s.AddItemToInventory = m(s.AddItemToInventory)
+	s.RemoveItemFromInventory = m(s.RemoveItemFromInventory)
 }
 
 // MethodNames returns the methods served.
@@ -84,6 +96,9 @@ func Mount(mux goahttp.Muxer, h *Server) {
 	MountGetCharacterHandler(mux, h.GetCharacter)
 	MountUpdateCharacterHandler(mux, h.UpdateCharacter)
 	MountDeleteCharacterHandler(mux, h.DeleteCharacter)
+	MountGetInventoryHandler(mux, h.GetInventory)
+	MountAddItemToInventoryHandler(mux, h.AddItemToInventory)
+	MountRemoveItemFromInventoryHandler(mux, h.RemoveItemFromInventory)
 }
 
 // Mount configures the mux to serve the externalservice endpoints.
@@ -274,6 +289,161 @@ func NewDeleteCharacterHandler(
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
 		ctx = context.WithValue(ctx, goa.MethodKey, "delete_character")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "externalservice")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountGetInventoryHandler configures the mux to serve the "externalservice"
+// service "get_inventory" endpoint.
+func MountGetInventoryHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/characters/{character_id}/inventory", f)
+}
+
+// NewGetInventoryHandler creates a HTTP handler which loads the HTTP request
+// and calls the "externalservice" service "get_inventory" endpoint.
+func NewGetInventoryHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(ctx context.Context, err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeGetInventoryRequest(mux, decoder)
+		encodeResponse = EncodeGetInventoryResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "get_inventory")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "externalservice")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountAddItemToInventoryHandler configures the mux to serve the
+// "externalservice" service "add_item_to_inventory" endpoint.
+func MountAddItemToInventoryHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("POST", "/characters/{character_id}/inventory/items", f)
+}
+
+// NewAddItemToInventoryHandler creates a HTTP handler which loads the HTTP
+// request and calls the "externalservice" service "add_item_to_inventory"
+// endpoint.
+func NewAddItemToInventoryHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(ctx context.Context, err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeAddItemToInventoryRequest(mux, decoder)
+		encodeResponse = EncodeAddItemToInventoryResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "add_item_to_inventory")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "externalservice")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountRemoveItemFromInventoryHandler configures the mux to serve the
+// "externalservice" service "remove_item_from_inventory" endpoint.
+func MountRemoveItemFromInventoryHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("DELETE", "/characters/{character_id}/inventory/items/{item_id}", f)
+}
+
+// NewRemoveItemFromInventoryHandler creates a HTTP handler which loads the
+// HTTP request and calls the "externalservice" service
+// "remove_item_from_inventory" endpoint.
+func NewRemoveItemFromInventoryHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(ctx context.Context, err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeRemoveItemFromInventoryRequest(mux, decoder)
+		encodeResponse = EncodeRemoveItemFromInventoryResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "remove_item_from_inventory")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "externalservice")
 		payload, err := decodeRequest(r)
 		if err != nil {

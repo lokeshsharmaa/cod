@@ -22,7 +22,7 @@ func BuildCreateCharacterPayload(externalserviceCreateCharacterBody string) (*ex
 	{
 		err = json.Unmarshal([]byte(externalserviceCreateCharacterBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"description\": \"Ad excepturi officia necessitatibus autem vero.\",\n      \"experience\": 6304895944173359943,\n      \"health\": 7361944416981608895,\n      \"name\": \"Ipsa eum necessitatibus ratione commodi.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"description\": \"Quia officiis sunt qui quia.\",\n      \"experience\": 8516222454781191823,\n      \"health\": 4571870516214136443,\n      \"name\": \"Vero omnis illum ratione pariatur laboriosam quia.\"\n   }'")
 		}
 	}
 	v := &externalservice.CreateCharacterPayload{
@@ -62,7 +62,7 @@ func BuildUpdateCharacterPayload(externalserviceUpdateCharacterBody string, exte
 	{
 		err = json.Unmarshal([]byte(externalserviceUpdateCharacterBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"description\": \"Quia quae distinctio ut.\",\n      \"experience\": 8109871214411202544,\n      \"health\": 5826639684918267823,\n      \"name\": \"Eius dolor at molestiae iste qui.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"description\": \"Ut mollitia est.\",\n      \"experience\": 5568484907136742814,\n      \"health\": 2968286776226512618,\n      \"name\": \"Dolore voluptas distinctio qui aperiam pariatur.\"\n   }'")
 		}
 	}
 	var id int
@@ -100,6 +100,82 @@ func BuildDeleteCharacterPayload(externalserviceDeleteCharacterID string) (*exte
 	}
 	v := &externalservice.DeleteCharacterPayload{}
 	v.ID = id
+
+	return v, nil
+}
+
+// BuildGetInventoryPayload builds the payload for the externalservice
+// get_inventory endpoint from CLI flags.
+func BuildGetInventoryPayload(externalserviceGetInventoryCharacterID string) (*externalservice.GetInventoryPayload, error) {
+	var err error
+	var characterID int
+	{
+		var v int64
+		v, err = strconv.ParseInt(externalserviceGetInventoryCharacterID, 10, strconv.IntSize)
+		characterID = int(v)
+		if err != nil {
+			return nil, fmt.Errorf("invalid value for characterID, must be INT")
+		}
+	}
+	v := &externalservice.GetInventoryPayload{}
+	v.CharacterID = characterID
+
+	return v, nil
+}
+
+// BuildAddItemToInventoryPayload builds the payload for the externalservice
+// add_item_to_inventory endpoint from CLI flags.
+func BuildAddItemToInventoryPayload(externalserviceAddItemToInventoryBody string, externalserviceAddItemToInventoryCharacterID string) (*externalservice.AddItemToInventoryPayload, error) {
+	var err error
+	var body AddItemToInventoryRequestBody
+	{
+		err = json.Unmarshal([]byte(externalserviceAddItemToInventoryBody), &body)
+		if err != nil {
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"item_id\": 8734216661098503449\n   }'")
+		}
+	}
+	var characterID int
+	{
+		var v int64
+		v, err = strconv.ParseInt(externalserviceAddItemToInventoryCharacterID, 10, strconv.IntSize)
+		characterID = int(v)
+		if err != nil {
+			return nil, fmt.Errorf("invalid value for characterID, must be INT")
+		}
+	}
+	v := &externalservice.AddItemToInventoryPayload{
+		ItemID: body.ItemID,
+	}
+	v.CharacterID = characterID
+
+	return v, nil
+}
+
+// BuildRemoveItemFromInventoryPayload builds the payload for the
+// externalservice remove_item_from_inventory endpoint from CLI flags.
+func BuildRemoveItemFromInventoryPayload(externalserviceRemoveItemFromInventoryCharacterID string, externalserviceRemoveItemFromInventoryItemID string) (*externalservice.RemoveItemFromInventoryPayload, error) {
+	var err error
+	var characterID int
+	{
+		var v int64
+		v, err = strconv.ParseInt(externalserviceRemoveItemFromInventoryCharacterID, 10, strconv.IntSize)
+		characterID = int(v)
+		if err != nil {
+			return nil, fmt.Errorf("invalid value for characterID, must be INT")
+		}
+	}
+	var itemID int
+	{
+		var v int64
+		v, err = strconv.ParseInt(externalserviceRemoveItemFromInventoryItemID, 10, strconv.IntSize)
+		itemID = int(v)
+		if err != nil {
+			return nil, fmt.Errorf("invalid value for itemID, must be INT")
+		}
+	}
+	v := &externalservice.RemoveItemFromInventoryPayload{}
+	v.CharacterID = characterID
+	v.ItemID = itemID
 
 	return v, nil
 }

@@ -22,17 +22,17 @@ import (
 //
 //	command (subcommand1|subcommand2|...)
 func UsageCommands() string {
-	return `externalservice (create-character|get-character|update-character|delete-character)
+	return `externalservice (create-character|get-character|update-character|delete-character|get-inventory|add-item-to-inventory|remove-item-from-inventory)
 `
 }
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
 	return os.Args[0] + ` externalservice create-character --body '{
-      "description": "Ad excepturi officia necessitatibus autem vero.",
-      "experience": 6304895944173359943,
-      "health": 7361944416981608895,
-      "name": "Ipsa eum necessitatibus ratione commodi."
+      "description": "Quia officiis sunt qui quia.",
+      "experience": 8516222454781191823,
+      "health": 4571870516214136443,
+      "name": "Vero omnis illum ratione pariatur laboriosam quia."
    }'` + "\n" +
 		""
 }
@@ -61,12 +61,26 @@ func ParseEndpoint(
 
 		externalserviceDeleteCharacterFlags  = flag.NewFlagSet("delete-character", flag.ExitOnError)
 		externalserviceDeleteCharacterIDFlag = externalserviceDeleteCharacterFlags.String("id", "REQUIRED", "Character ID")
+
+		externalserviceGetInventoryFlags           = flag.NewFlagSet("get-inventory", flag.ExitOnError)
+		externalserviceGetInventoryCharacterIDFlag = externalserviceGetInventoryFlags.String("character-id", "REQUIRED", "Character ID")
+
+		externalserviceAddItemToInventoryFlags           = flag.NewFlagSet("add-item-to-inventory", flag.ExitOnError)
+		externalserviceAddItemToInventoryBodyFlag        = externalserviceAddItemToInventoryFlags.String("body", "REQUIRED", "")
+		externalserviceAddItemToInventoryCharacterIDFlag = externalserviceAddItemToInventoryFlags.String("character-id", "REQUIRED", "Character ID")
+
+		externalserviceRemoveItemFromInventoryFlags           = flag.NewFlagSet("remove-item-from-inventory", flag.ExitOnError)
+		externalserviceRemoveItemFromInventoryCharacterIDFlag = externalserviceRemoveItemFromInventoryFlags.String("character-id", "REQUIRED", "Character ID")
+		externalserviceRemoveItemFromInventoryItemIDFlag      = externalserviceRemoveItemFromInventoryFlags.String("item-id", "REQUIRED", "Item ID")
 	)
 	externalserviceFlags.Usage = externalserviceUsage
 	externalserviceCreateCharacterFlags.Usage = externalserviceCreateCharacterUsage
 	externalserviceGetCharacterFlags.Usage = externalserviceGetCharacterUsage
 	externalserviceUpdateCharacterFlags.Usage = externalserviceUpdateCharacterUsage
 	externalserviceDeleteCharacterFlags.Usage = externalserviceDeleteCharacterUsage
+	externalserviceGetInventoryFlags.Usage = externalserviceGetInventoryUsage
+	externalserviceAddItemToInventoryFlags.Usage = externalserviceAddItemToInventoryUsage
+	externalserviceRemoveItemFromInventoryFlags.Usage = externalserviceRemoveItemFromInventoryUsage
 
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
 		return nil, nil, err
@@ -114,6 +128,15 @@ func ParseEndpoint(
 			case "delete-character":
 				epf = externalserviceDeleteCharacterFlags
 
+			case "get-inventory":
+				epf = externalserviceGetInventoryFlags
+
+			case "add-item-to-inventory":
+				epf = externalserviceAddItemToInventoryFlags
+
+			case "remove-item-from-inventory":
+				epf = externalserviceRemoveItemFromInventoryFlags
+
 			}
 
 		}
@@ -151,6 +174,15 @@ func ParseEndpoint(
 			case "delete-character":
 				endpoint = c.DeleteCharacter()
 				data, err = externalservicec.BuildDeleteCharacterPayload(*externalserviceDeleteCharacterIDFlag)
+			case "get-inventory":
+				endpoint = c.GetInventory()
+				data, err = externalservicec.BuildGetInventoryPayload(*externalserviceGetInventoryCharacterIDFlag)
+			case "add-item-to-inventory":
+				endpoint = c.AddItemToInventory()
+				data, err = externalservicec.BuildAddItemToInventoryPayload(*externalserviceAddItemToInventoryBodyFlag, *externalserviceAddItemToInventoryCharacterIDFlag)
+			case "remove-item-from-inventory":
+				endpoint = c.RemoveItemFromInventory()
+				data, err = externalservicec.BuildRemoveItemFromInventoryPayload(*externalserviceRemoveItemFromInventoryCharacterIDFlag, *externalserviceRemoveItemFromInventoryItemIDFlag)
 			}
 		}
 	}
@@ -173,6 +205,9 @@ COMMAND:
     get-character: Fetching a Character
     update-character: Updating a Character
     delete-character: Deleting a Character
+    get-inventory: Fetching a Character's Inventory
+    add-item-to-inventory: Adding an Item to Character's Inventory
+    remove-item-from-inventory: Removing an Item from Character's Inventory
 
 Additional help:
     %[1]s externalservice COMMAND --help
@@ -186,10 +221,10 @@ Creating a new Character
 
 Example:
     %[1]s externalservice create-character --body '{
-      "description": "Ad excepturi officia necessitatibus autem vero.",
-      "experience": 6304895944173359943,
-      "health": 7361944416981608895,
-      "name": "Ipsa eum necessitatibus ratione commodi."
+      "description": "Quia officiis sunt qui quia.",
+      "experience": 8516222454781191823,
+      "health": 4571870516214136443,
+      "name": "Vero omnis illum ratione pariatur laboriosam quia."
    }'
 `, os.Args[0])
 }
@@ -201,7 +236,7 @@ Fetching a Character
     -id INT: Character ID
 
 Example:
-    %[1]s externalservice get-character --id 8516222454781191823
+    %[1]s externalservice get-character --id 8489983945726841594
 `, os.Args[0])
 }
 
@@ -214,11 +249,11 @@ Updating a Character
 
 Example:
     %[1]s externalservice update-character --body '{
-      "description": "Quia quae distinctio ut.",
-      "experience": 8109871214411202544,
-      "health": 5826639684918267823,
-      "name": "Eius dolor at molestiae iste qui."
-   }' --id 2446497314123511081
+      "description": "Ut mollitia est.",
+      "experience": 5568484907136742814,
+      "health": 2968286776226512618,
+      "name": "Dolore voluptas distinctio qui aperiam pariatur."
+   }' --id 4151177939316041850
 `, os.Args[0])
 }
 
@@ -229,6 +264,43 @@ Deleting a Character
     -id INT: Character ID
 
 Example:
-    %[1]s externalservice delete-character --id 6052710139295842249
+    %[1]s externalservice delete-character --id 9038319797943560120
+`, os.Args[0])
+}
+
+func externalserviceGetInventoryUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] externalservice get-inventory -character-id INT
+
+Fetching a Character's Inventory
+    -character-id INT: Character ID
+
+Example:
+    %[1]s externalservice get-inventory --character-id 7504908446685337858
+`, os.Args[0])
+}
+
+func externalserviceAddItemToInventoryUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] externalservice add-item-to-inventory -body JSON -character-id INT
+
+Adding an Item to Character's Inventory
+    -body JSON: 
+    -character-id INT: Character ID
+
+Example:
+    %[1]s externalservice add-item-to-inventory --body '{
+      "item_id": 8734216661098503449
+   }' --character-id 3284904739076678877
+`, os.Args[0])
+}
+
+func externalserviceRemoveItemFromInventoryUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] externalservice remove-item-from-inventory -character-id INT -item-id INT
+
+Removing an Item from Character's Inventory
+    -character-id INT: Character ID
+    -item-id INT: Item ID
+
+Example:
+    %[1]s externalservice remove-item-from-inventory --character-id 1912081011969081114 --item-id 3592539134250285414
 `, os.Args[0])
 }
