@@ -76,8 +76,16 @@ func (c *client) GetCharacter(ctx context.Context, payload *GetPayload) (*Charac
 	if err != nil {
 		return nil, err
 	}
-	character := res.(*Character)
-	return character, nil
+	character := res.(*characterservice.Character)
+
+	response := &Character{
+		ID:          character.ID,
+		Name:        character.Name,
+		Description: character.Description,
+		Health:      character.Health,
+		Experience:  character.Experience,
+	}
+	return response, nil
 }
 
 func (c *client) UpdateCharacter(ctx context.Context, payload *UpdatePayload) error {

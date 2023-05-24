@@ -82,8 +82,17 @@ func (c *client) GetItem(ctx context.Context, payload *GetPayload) (*Item, error
 	if err != nil {
 		return nil, err
 	}
-	item := res.(*Item)
-	return item, nil
+	item := res.(*itemService.Item)
+
+	response := &Item{
+		ID:          item.ID,
+		Name:        item.Name,
+		Description: item.Description,
+		Damage:      item.Damage,
+		Healing:     item.Healing,
+		Protection:  item.Protection,
+	}
+	return response, nil
 }
 
 func (c *client) UpdateItem(ctx context.Context, payload *UpdatePayload) error {
