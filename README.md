@@ -73,8 +73,7 @@ cd externalservice
 
 ## TODO
 1. Integrating Item service client
-2. Test for Inventory Service
-3. Better Response Handling
+2. Better Response Handling
 
 ## Refactoring
 
