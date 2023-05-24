@@ -1,0 +1,87 @@
+// Code generated with goa v3.11.3, DO NOT EDIT.
+//
+// ItemService protocol buffer definition
+//
+// Command:
+// $ goa gen assignment_crossnokaye/cod/itemservice/design
+
+syntax = "proto3";
+
+package item_service;
+
+option go_package = "/item_servicepb";
+
+// The ItemService service handles CRUD operations for items
+service ItemService {
+	// Create a new item
+	rpc Create (CreateRequest) returns (CreateResponse);
+	// Retrieve an item by ID
+	rpc Get (GetRequest) returns (GetResponse);
+	// Update an item
+	rpc Update (UpdateRequest) returns (UpdateResponse);
+	// Delete an item by ID
+	rpc Delete (DeleteRequest) returns (DeleteResponse);
+}
+
+message CreateRequest {
+	// Item name
+	string name = 1;
+	// Item description
+	optional string description = 2;
+	// Item damage
+	sint32 damage = 3;
+	// Item healing
+	optional sint32 healing = 4;
+	// Item protection
+	optional sint32 protection = 5;
+}
+
+message CreateResponse {
+	sint32 field = 1;
+}
+
+message GetRequest {
+	// Item ID
+	sint32 id = 1;
+}
+
+message GetResponse {
+	// Item ID
+	optional sint32 id = 1;
+	// Item name
+	optional string name = 2;
+	// Item description
+	optional string description = 3;
+	// Item damage
+	optional sint32 damage = 4;
+	// Item healing
+	optional sint32 healing = 5;
+	// Item protection
+	optional sint32 protection = 6;
+}
+
+message UpdateRequest {
+	// Item ID
+	sint32 id = 1;
+	// Item name
+	optional string name = 2;
+	// Item description
+	optional string description = 3;
+	// Item damage
+	optional sint32 damage = 4;
+	// Item healing
+	optional sint32 healing = 5;
+	// Item protection
+	optional sint32 protection = 6;
+}
+
+message UpdateResponse {
+}
+
+message DeleteRequest {
+	// Item ID
+	sint32 id = 1;
+}
+
+message DeleteResponse {
+}
