@@ -4,6 +4,7 @@ import (
 	externalserviceapi "assignment_crossnokaye/cod/externalservice"
 	"assignment_crossnokaye/cod/externalservice/clients/characterservice"
 	"assignment_crossnokaye/cod/externalservice/clients/inventoryservice"
+	"assignment_crossnokaye/cod/externalservice/clients/itemservice"
 	externalservice "assignment_crossnokaye/cod/externalservice/gen/externalservice"
 	"context"
 	"flag"
@@ -38,6 +39,7 @@ func main() {
 	var (
 		characterServiceAddr = flag.String("characterservice", "localhost:8081", "Character service address")
 		inventoryServiceAddr = flag.String("inventoryservice", "localhost:8082", "Inventory service address")
+		itemServiceAddr      = flag.String("itemservice", "localhost:8083", "Item service address")
 	)
 	{
 		logger = log.New(os.Stderr, "[externalserviceapi] ", log.Ltime)
@@ -67,7 +69,17 @@ func main() {
 		}
 		inventoryServiceClient := inventoryservice.New(inventoryServiceConn)
 
-		externalserviceSvc = externalserviceapi.NewExternalservice(logger, characterServiceClient, inventoryServiceClient)
+		itemServiceConn, err := grpc.DialContext(ctx, *itemServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()),
+			grpc.FailOnNonTempDialError(true),
+			grpc.WithBlock())
+		if err != nil {
+			logger.Panic(ctx, err, "failed to connect to Item Service")
+			os.Exit(1)
+		}
+
+		itemServiceClient := itemservice.New(itemServiceConn)
+
+		externalserviceSvc = externalserviceapi.NewExternalservice(logger, characterServiceClient, inventoryServiceClient, itemServiceClient)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services

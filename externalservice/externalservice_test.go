@@ -20,7 +20,7 @@ func TestCreateCharacter(t *testing.T) {
 
 	mockCharacterServiceClient := characterServiceMock.NewMockClient(ctrl)
 	mockInventoryServiceClient := inventoryServiceMock.NewMockClient(ctrl)
-	service := NewExternalservice(logger, mockCharacterServiceClient, mockInventoryServiceClient)
+	service := NewExternalservice(logger, mockCharacterServiceClient, mockInventoryServiceClient, nil)
 
 	ctx := context.Background()
 	name := "test"
@@ -62,7 +62,7 @@ func TestGetCharacter(t *testing.T) {
 
 	mockCharacterServiceClient := characterServiceMock.NewMockClient(ctrl)
 	mockInventoryServiceClient := inventoryServiceMock.NewMockClient(ctrl)
-	service := NewExternalservice(logger, mockCharacterServiceClient, mockInventoryServiceClient)
+	service := NewExternalservice(logger, mockCharacterServiceClient, mockInventoryServiceClient, nil)
 
 	ctx := context.Background()
 
@@ -110,7 +110,7 @@ func TestGetInventory(t *testing.T) {
 	mockInventoryServiceClient := inventoryServiceMock.NewMockClient(ctrl)
 
 	logger := log.New(nil, "", 0)
-	service := NewExternalservice(logger, mockCharacterServiceClient, mockInventoryServiceClient)
+	service := NewExternalservice(logger, mockCharacterServiceClient, mockInventoryServiceClient, nil)
 
 	ctx := context.Background()
 	characterID := 1
@@ -145,7 +145,7 @@ func TestAddItemToInventory(t *testing.T) {
 	mockInventoryServiceClient := inventoryServiceMock.NewMockClient(ctrl)
 
 	logger := log.New(nil, "", 0)
-	service := NewExternalservice(logger, mockCharacterServiceClient, mockInventoryServiceClient)
+	service := NewExternalservice(logger, mockCharacterServiceClient, mockInventoryServiceClient, nil)
 
 	ctx := context.Background()
 	id := 1
@@ -174,7 +174,7 @@ func TestRemoveItemFromInventory(t *testing.T) {
 	mockInventoryServiceClient := inventoryServiceMock.NewMockClient(ctrl)
 
 	logger := log.New(nil, "", 0)
-	service := NewExternalservice(logger, mockCharacterServiceClient, mockInventoryServiceClient)
+	service := NewExternalservice(logger, mockCharacterServiceClient, mockInventoryServiceClient, nil)
 
 	ctx := context.Background()
 	payload := &externalservice.RemoveItemFromInventoryPayload{

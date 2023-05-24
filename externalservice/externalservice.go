@@ -3,6 +3,7 @@ package externalserviceapi
 import (
 	"assignment_crossnokaye/cod/externalservice/clients/characterservice"
 	"assignment_crossnokaye/cod/externalservice/clients/inventoryservice"
+	"assignment_crossnokaye/cod/externalservice/clients/itemservice"
 	externalservice "assignment_crossnokaye/cod/externalservice/gen/externalservice"
 	"context"
 	"log"
@@ -14,10 +15,11 @@ type externalservicesrvc struct {
 	logger                 *log.Logger
 	characterServiceClient characterservice.Client
 	inventoryServiceClient inventoryservice.Client
+	itemServiceClient      itemservice.Client
 }
 
-func NewExternalservice(logger *log.Logger, characterServiceClient characterservice.Client, inventoryServiceClient inventoryservice.Client) externalservice.Service {
-	return &externalservicesrvc{logger: logger, characterServiceClient: characterServiceClient, inventoryServiceClient: inventoryServiceClient}
+func NewExternalservice(logger *log.Logger, characterServiceClient characterservice.Client, inventoryServiceClient inventoryservice.Client, itemServiceClient itemservice.Client) externalservice.Service {
+	return &externalservicesrvc{logger: logger, characterServiceClient: characterServiceClient, inventoryServiceClient: inventoryServiceClient, itemServiceClient: itemServiceClient}
 }
 
 func (s *externalservicesrvc) CreateCharacter(ctx context.Context, p *externalservice.CreateCharacterPayload) (res *externalservice.Character, err error) {
