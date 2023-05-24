@@ -49,11 +49,6 @@ type (
 		Update goa.Endpoint
 		Delete goa.Endpoint
 	}
-
-	response struct {
-		Res int
-		Err error
-	}
 )
 
 func New(cc *grpc.ClientConn) Client {
